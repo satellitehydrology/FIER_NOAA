@@ -96,4 +96,4 @@ with row1_col1:
     
     uh = Image.open("logo/UH_Logo.png")
     jpss = Image.open("logo/JPSS_Logo.png")   
-    st.image([uh, jpss],width=200)    
+    st.image([uh, jpss],width=100)    
