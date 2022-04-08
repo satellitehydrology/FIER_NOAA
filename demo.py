@@ -21,7 +21,7 @@ def colorize(data, cmap='viridis'):
 st.set_page_config(layout="wide")
 
 # Title and Description
-st.title("FIER – Water Fraction")
+st.title("Forecasting Inundation Extents using REOF analysis (FIER) – VIIRS/ABI Water Fraction")
 
 
 row1_col1, row1_col2 = st.columns([2, 1])
