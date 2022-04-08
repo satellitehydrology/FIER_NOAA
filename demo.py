@@ -64,7 +64,7 @@ with row1_col2:
 
             location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
             m = folium.Map(
-                zoom_start = 7,
+                zoom_start = 8,
                 location = location,
                 control_scale=True,
             )
@@ -83,6 +83,16 @@ with row1_col2:
             m.add_child(folium.LatLngPopup())
             folium.LayerControl().add_to(m)
 
+    try:
+        with open('Output/output.nc', 'rb') as f:
+            st.download_button('Download Latest Run Output',
+            f,
+            file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
+            mime= "application/netcdf")
+    except:
+        pass
+
+
 
 with row1_col1:
     folium_static(m, height = 600, width = 900)
@@ -90,10 +100,10 @@ with row1_col1:
     url = "https://www.sciencedirect.com/science/article/pii/S0034425720301024?casa_token=kOYlVMMWkBUAAAAA:fiFM4l6BUzJ8xTCksYUe7X4CcojddbO8ybzOSMe36f2cFWEXDa_aFHaGeEFlN8SuPGnDy7Ir8w"
     st.write("Reference: [Chang, C. H., Lee, H., Kim, D., Hwang, E., Hossain, F., Chishtie, F., ... & Basnayake, S. (2020). Hindcast and forecast of daily inundation extents using satellite SAR and altimetry data with rotated empirical orthogonal function analysis: Case study in Tonle Sap Lake Floodplain. Remote Sensing of Environment, 241, 111732.](%s)" % url)
     url = "https://uofh-my.sharepoint.com/:b:/g/personal/cchang37_cougarnet_uh_edu/EZ70ySxmR3RDhJL5-uAHlAEBf0xI4c-BMsXQnUKT009kFA?e=tynflq"
-    st.write("See here for the [Data and Procedure](%s)" % url)    
+    st.write("See here for the [Data and Procedure](%s)" % url)
     st.write("This app has been developed by Chi-Hung Chang  & Son Do at University of Houston with supports from NOAA JPSS program.")
     st.write("Kel Markert at SERVIR Coordination Office is also acknowledged for the development of this App.")
-    
+
     uh = Image.open("logo/UH_Logo.png")
-    jpss = Image.open("logo/JPSS_Logo.png")   
-    st.image([uh, jpss],width=100)    
+    jpss = Image.open("logo/JPSS_Logo.png")
+    st.image([uh, jpss],width=100)

@@ -117,16 +117,29 @@ def run_fier(AOI_str, doi):
     syn_wf.close()
     q_out.close()
 
-    # # Create image
-    # folder_name = 'Output'
-    #
-    # fig = plt.figure()
-    # plt.imshow(map_syn_fct[0,:,:], cmap='jet', vmin=0, vmax=100,interpolation='none')
-    # plt.axis('off')
-    # plt.savefig(folder_name +'/water_fraction.png', bbox_inches='tight', dpi=300, pad_inches = 0)
-    # plt.close()
+    # Create image
+    folder_name = 'Output'
+
+    fig = plt.figure()
+    plt.imshow(map_syn_fct[0,:,:], cmap='jet', vmin=0, vmax=100,interpolation='none')
+    plt.axis('off')
+    plt.savefig(folder_name +'/water_fraction.png', bbox_inches='tight', dpi=300, pad_inches = 0)
+    plt.close()
 
     bounds = [[syn_wf_fct.lat.values.min(), syn_wf_fct.lon.values.min()],
     [syn_wf_fct.lat.values.max(), syn_wf_fct.lon.values.max()]]
+
+    out_file = xr.Dataset(
+            {
+                "Water Fraction Map": (
+                    syn_wf_fct.dims,
+                    np.transpose(map_syn_fct, (1,2,0))
+                                ),
+            },
+            coords = syn_wf_fct.coords,
+        )
+
+    out_file.to_netcdf(folder_name +'/output.nc')
+
 
     return bounds
