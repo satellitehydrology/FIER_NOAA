@@ -104,7 +104,7 @@ with row1_col1:
     st.write("This app has been developed by Chi-Hung Chang  & Son Do at University of Houston with supports from NOAA JPSS program.")
     st.write("Kel Markert at the Brigham Young University is also acknowledged for the development of this App.")
 
-    uh = Image.open("logo/UH_Logo.png")
+    uh = Image.open("logo/UH_Logo.gif")
     byu = Image.open("logo/BYU_Logo.png")
     jpss = Image.open("logo/JPSS_Logo.png")
     st.image([uh, byu, jpss],width=100)
