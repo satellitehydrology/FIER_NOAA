@@ -9,13 +9,8 @@ import numpy.ma as ma
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime
-
-
-def colorize(data, cmap='viridis'):
-    array = ma.masked_invalid(data)
-    normed_data = (array - array.min()) / (array.max() - array.min())
-    cm = plt.cm.get_cmap(cmap)
-    return cm(array)
+import branca
+import branca.colormap as cm
 
 # Page Configuration
 st.set_page_config(layout="wide")
@@ -32,10 +27,15 @@ with row1_col1:
         location =(36.52, -89.55),
         control_scale=True,
     )
+
     plugins.Fullscreen(position='topright').add_to(m)
     folium.TileLayer('Stamen Terrain').add_to(m)
     m.add_child(folium.LatLngPopup())
     folium.LayerControl().add_to(m)
+
+
+
+
 
 with row1_col2:
     st.subheader('Determine Region of Interest')
@@ -78,6 +78,11 @@ with row1_col2:
                 show = True,
             ).add_to(m)
 
+            colormap = cm.LinearColormap(colors=['blue','green','red'],
+                                      vmin=0, vmax=100,
+                                     caption='Water Fraction (%)')
+            m.add_child(colormap)
+              
             plugins.Fullscreen(position='topright').add_to(m)
             folium.TileLayer('Stamen Terrain').add_to(m)
             m.add_child(folium.LatLngPopup())
