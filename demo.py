@@ -20,7 +20,7 @@ def colorize(data, cmap='viridis'):
 st.set_page_config(layout="wide")
 
 # Title and Description
-st.title("Title Place Holder")
+st.title("FIER – Water Fraction")
 
 
 row1_col1, row1_col2 = st.columns([2, 1])
@@ -85,8 +85,8 @@ with row1_col2:
 
 with row1_col1:
     folium_static(m, height = 600, width = 900)
-    st.write('Disclaimer: Disclaimer Place Holder')
+    st.write('Disclaimer: This is a test version of FIER using VIIRS-derived water fraction maps over selected regions in US.')
     url = "https://www.sciencedirect.com/science/article/pii/S0034425720301024?casa_token=kOYlVMMWkBUAAAAA:fiFM4l6BUzJ8xTCksYUe7X4CcojddbO8ybzOSMe36f2cFWEXDa_aFHaGeEFlN8SuPGnDy7Ir8w"
     st.write("Reference: [Chang, C. H., Lee, H., Kim, D., Hwang, E., Hossain, F., Chishtie, F., ... & Basnayake, S. (2020). Hindcast and forecast of daily inundation extents using satellite SAR and altimetry data with rotated empirical orthogonal function analysis: Case study in Tonle Sap Lake Floodplain. Remote Sensing of Environment, 241, 111732.](%s)" % url)
-    st.write("This app has been developed by Chi-Hung Chang  & Son Do at University of Houston with supports from ???.")
+    st.write("This app has been developed by Chi-Hung Chang  & Son Do at University of Houston with supports from NOAA JPSS program.")
     st.write("Kel Markert at SERVIR Coordination Office is also acknowledged for the development of this App.")
