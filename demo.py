@@ -47,7 +47,7 @@ with row1_col2:
      )
 
         date = st.date_input(
-             "Select Date:",
+             "Select Date (2019-02-01 to 2021-06-30):",
              value = datetime.date(2019, 2, 25),
              min_value = datetime.date(2019, 2, 1),
              max_value = datetime.date(2021, 6, 30),
