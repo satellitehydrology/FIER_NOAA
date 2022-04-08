@@ -2,6 +2,7 @@ import folium
 import folium.plugins as plugins
 import streamlit as st
 from streamlit_folium import folium_static
+from PIL import Image
 import xarray as xr
 from syn_noaa import *
 import numpy.ma as ma
@@ -92,4 +93,7 @@ with row1_col1:
     st.write("See here for the [Data and Procedure](%s)" % url)    
     st.write("This app has been developed by Chi-Hung Chang  & Son Do at University of Houston with supports from NOAA JPSS program.")
     st.write("Kel Markert at SERVIR Coordination Office is also acknowledged for the development of this App.")
-    st.image("https://github.com/skd862/logo/JPSS_Logo.png")
+    
+    
+    jpss = Image.open("https://github.com/skd862/logo/JPSS_Logo.png")
+    st.image(jpss,width=50)
