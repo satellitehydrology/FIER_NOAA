@@ -95,5 +95,5 @@ with row1_col1:
     st.write("Kel Markert at SERVIR Coordination Office is also acknowledged for the development of this App.")
     
     
-    jpss = Image.open("https://github.com/skd862/logo/JPSS_Logo.png")
+    jpss = Image.open("logo/JPSS_Logo.png")
     st.image(jpss,width=50)
