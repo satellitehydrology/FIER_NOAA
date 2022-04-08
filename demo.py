@@ -92,3 +92,4 @@ with row1_col1:
     st.write("See here for the [Data and Procedure](%s)" % url)    
     st.write("This app has been developed by Chi-Hung Chang  & Son Do at University of Houston with supports from NOAA JPSS program.")
     st.write("Kel Markert at SERVIR Coordination Office is also acknowledged for the development of this App.")
+    st.image("https://github.com/skd862/logo/JPSS_Logo.png",width=10)
