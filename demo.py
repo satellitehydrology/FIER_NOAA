@@ -102,8 +102,9 @@ with row1_col1:
     url = "https://uofh-my.sharepoint.com/:b:/g/personal/cchang37_cougarnet_uh_edu/EZ70ySxmR3RDhJL5-uAHlAEBf0xI4c-BMsXQnUKT009kFA?e=tynflq"
     st.write("See here for the [Data and Procedure](%s)" % url)
     st.write("This app has been developed by Chi-Hung Chang  & Son Do at University of Houston with supports from NOAA JPSS program.")
-    st.write("Kel Markert at SERVIR Coordination Office is also acknowledged for the development of this App.")
+    st.write("Kel Markert at the Brigham Young University is also acknowledged for the development of this App.")
 
     uh = Image.open("logo/UH_Logo.png")
+    byu = Image.open("logo/BYU_Logo.png")
     jpss = Image.open("logo/JPSS_Logo.png")
-    st.image([uh, jpss],width=100)
+    st.image([uh, byu, jpss],width=100)
