@@ -107,4 +107,4 @@ with row1_col1:
     uh = Image.open("logo/UH_Logo.png")
     byu = Image.open("logo/BYU_Logo.png")
     jpss = Image.open("logo/JPSS_Logo.png")
-    st.image([uh, byu, jpss])
+    st.image([uh, byu, jpss], width=150)
