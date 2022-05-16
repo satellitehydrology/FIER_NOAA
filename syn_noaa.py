@@ -7,6 +7,9 @@ import xarray as xr
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.colors
+import pynwm
+import datetime as dt
+import pandas as pd
 
 def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
     map_syn = np.empty((qm_stack.sizes['time'],qm_stack.sizes['lat'],qm_stack.sizes['lon']))
@@ -71,12 +74,13 @@ def run_fier(AOI_str, doi):
     hist_real_stack_path = 'AOI/'+AOI_str+'/aux_img_stack/hist_real_wf_2020.nc'
     hist_syn_stack_path = 'AOI/'+AOI_str+'/aux_img_stack/hist_syn_stack_2020.nc'
     RSM_path = 'AOI/'+AOI_str+'/RSM/RSM_hydro.nc'
-    forecast_q_path = 'AOI/'+AOI_str+'/hydrodata/mid_fct_2019_2021_0024.nc'
+#    forecast_q_path = 'AOI/'+AOI_str+'/hydrodata/mid_fct_2019_2021_0024.nc'
+    
 
     xr_RSM=xr.open_dataset(RSM_path)
     img_stack=xr.open_dataset(hist_real_stack_path)
     syn_wf=xr.open_dataset(hist_syn_stack_path)
-    q_out = xr.open_dataarray(forecast_q_path)
+#    q_out = xr.open_dataarray(forecast_q_path)
 
     wf_mean = np.nanmean(img_stack.water_fraction.values, axis=0)
     for ct_mode in range(xr_RSM.sizes['mode']):
@@ -85,6 +89,19 @@ def run_fier(AOI_str, doi):
 
         sm = xr_RSM.spatial_modes.sel(mode=mode)
         site = xr_RSM.hydro_site[ct_mode].values
+             
+        mid_fct = pynwm.data_service.MediumRange(station_id=site)
+        fct_datetime = pd.to_datetime(pd.DataFrame(mid_fct.data['mean'][0]['data'])['forecast-time'])
+        doi_indx0 = fct_datetime >= (datetime.datetime.strptime(doi,'%Y-%m-%d'))
+        doi_indx1 = (fct_datetime < (datetime.datetime.strptime(doi,'%Y-%m-%d'))+datetime.timedelta(days=1))
+        doi_indx = doi_indx0 & doi_indx1
+        
+        doi_fct_datetime = fct_datetime[doi_indx]
+        doi_fct_q = (pd.DataFrame(mid_fct.data['mean'][0]['data'])['value'][doi_indx]*0.0283168).mean()
+        
+        
+        
+        
 
         hydro_single = q_out[ct_mode]
         good_hydro = hydro_single[hydro_single.time.values==doi]
