@@ -65,7 +65,8 @@ with row1_col2:
              min_value = today_date,
              max_value = last_date,
              )
-
+        st.write(date)
+        
         submitted = st.form_submit_button("Submit")
         if submitted:
             AOI_str = region.replace(" ", "")
