@@ -6,4 +6,7 @@ matplotlib
 netcdf4
 tensorflow
 openpyxl
+pandas
+numpy
+requests
 
