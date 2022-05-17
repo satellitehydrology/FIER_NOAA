@@ -6,6 +6,7 @@ from PIL import Image
 import xarray as xr
 from syn_noaa import *
 from pynwm_upd import *
+import pynwm
 import numpy.ma as ma
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -15,7 +16,7 @@ import branca.colormap as cm
 
 today_date = datetime.date.today()
 today_datestr = today_date.strftime('%Y-%m-%d')
-exp_mid_fct = MediumRange(station_id=7469342)
+exp_mid_fct = pynwm.MediumRange(station_id=7469342)
 
 exp_mid_fct_indata = exp_mid_fct.data["mean"][0]["data"]
 exp_mid_fct_data = pd.DataFrame(exp_mid_fct_indata)["forecast-time"]
