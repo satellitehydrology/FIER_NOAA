@@ -7,7 +7,7 @@ import xarray as xr
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.colors
-import pynwm
+from pynwm_upd import *
 import datetime as dt
 import pandas as pd
 
