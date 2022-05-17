@@ -5,12 +5,21 @@ from streamlit_folium import folium_static
 from PIL import Image
 import xarray as xr
 from syn_noaa import *
+from pynwm_upd import *
 import numpy.ma as ma
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime
 import branca
 import branca.colormap as cm
+
+today_date = datetime.date.today()
+today_datestr = today_date.strftime('%Y-%m-%d')
+exp_mid_fct = pynwm_upd.MediumRange(station_id=7469342)
+exp_mid_fct_time = pd.to_datetime(pd.DataFrame(exp_mid_fct.data['mean'][0]['data'])['forecast-time'])
+
+last_date = exp_mid_fct_time[len(exp_mid_fct_time)-1]
+last_datestr = last_date.strftime('%Y-%m-%d')
 
 # Page Configuration
 st.set_page_config(layout="wide")
@@ -47,10 +56,10 @@ with row1_col2:
      )
 
         date = st.date_input(
-             "Select Date (2019-02-01 to 2021-06-30):",
-             value = datetime.date.today(),
-             min_value = datetime.date.today(),
-             max_value = datetime.date.today()+datetime.timedelta(days=8),
+             "Select Date ("+today_datestr+" to "+last_datestr+"):",
+             value = today_date,
+             min_value = today_date,
+             max_value = last_date,
              )
 
         submitted = st.form_submit_button("Submit")
