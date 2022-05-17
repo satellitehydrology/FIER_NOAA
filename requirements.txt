@@ -11,3 +11,4 @@ numpy
 requests
 plotly
 datetime
+pynwm
