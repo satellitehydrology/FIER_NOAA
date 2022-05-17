@@ -90,11 +90,13 @@ def run_fier(AOI_str, doi):
         sm = xr_RSM.spatial_modes.sel(mode=mode)
         site = xr_RSM.hydro_site[ct_mode].values
              
-        mid_fct = pynwm.data_service.MediumRange(station_id=site)
+        mid_fct = pynwm_upd.MediumRange(station_id=site)
         fct_datetime = pd.to_datetime(pd.DataFrame(mid_fct.data['mean'][0]['data'])['forecast-time'])
         doi_indx0 = fct_datetime >= (datetime.datetime.strptime(doi,'%Y-%m-%d'))
         doi_indx1 = (fct_datetime < (datetime.datetime.strptime(doi,'%Y-%m-%d'))+datetime.timedelta(days=1))
         doi_indx = doi_indx0 & doi_indx1
+        
+        print(fct_datetime[0])
         
         doi_fct_datetime = fct_datetime[doi_indx]
         doi_fct_q = (pd.DataFrame(mid_fct.data['mean'][0]['data'])['value'][doi_indx]*0.0283168).mean()
