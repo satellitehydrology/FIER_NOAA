@@ -108,7 +108,8 @@ def run_fier(AOI_str, doi):
         #print(good_hydro)
         in_model = models.load_model(TF_model_path+'site-'+str(site)+'_tpc'+str(mode).zfill(2))
 
-        in_good_hydro = good_hydro.values.reshape((len(good_hydro),1))
+        #in_good_hydro = good_hydro.values.reshape((len(good_hydro),1))
+        in_good_hydro = doi_fct_q
         tf_good_hydro = tf.data.Dataset.from_tensors(in_good_hydro)
         est_tpc = in_model.predict(tf_good_hydro)
 
