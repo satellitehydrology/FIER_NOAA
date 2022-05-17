@@ -12,3 +12,4 @@ requests
 plotly
 datetime
 pynwm
+json
