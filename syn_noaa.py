@@ -134,7 +134,7 @@ def run_fier(AOI_str, doi):
     xr_RSM.close()
     img_stack.close()
     syn_wf.close()
-    q_out.close()
+    #q_out.close()
 
     # Create image
     folder_name = 'Output'
