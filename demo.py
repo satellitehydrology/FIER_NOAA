@@ -15,7 +15,7 @@ import branca.colormap as cm
 
 today_date = datetime.date.today()
 today_datestr = today_date.strftime('%Y-%m-%d')
-exp_mid_fct = pynwm_upd.MediumRange(station_id=7469342)
+exp_mid_fct = MediumRange(station_id=7469342)
 exp_mid_fct_time = pd.to_datetime(pd.DataFrame(exp_mid_fct.data['mean'][0]['data'])['forecast-time'])
 
 last_date = exp_mid_fct_time[len(exp_mid_fct_time)-1]
