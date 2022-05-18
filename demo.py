@@ -72,12 +72,15 @@ with row1_col2:
         if submitted:
             AOI_str = region.replace(" ", "")
             st.write('Region:', region)
-            st.write('Date:', date)
-
+            st.write('Date:', date)                                        
+            
             bounds = run_fier(AOI_str, str(date))
-
-
-            location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
+            
+            if region=='Mississippi River':
+                location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
+            elif region=='Red River:
+                location = [-96.85, 47.52]
+                
             m = folium.Map(
                 zoom_start = 8,
                 location = location,
