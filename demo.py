@@ -77,7 +77,7 @@ with row1_col2:
             if region=='Mississippi River':
                 location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
             elif region=='Red River':
-                location = [47.52, -96.85]
+                location = [48.44, -97.17]
                 
             m = folium.Map(
                 zoom_start = 8,
