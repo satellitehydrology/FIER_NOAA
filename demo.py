@@ -5,8 +5,6 @@ from streamlit_folium import folium_static
 from PIL import Image
 import xarray as xr
 from syn_noaa import *
-from pynwm_upd import *
-import pynwm
 import requests
 import numpy.ma as ma
 import pandas as pd
