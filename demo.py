@@ -57,7 +57,7 @@ with row1_col2:
 
         region = st.selectbox(
      'Determine region:',
-     ('Mississippi River', ),
+     ('Mississippi River', 'Red River'),
      )
 
         date = st.date_input(
