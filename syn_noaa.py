@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.colors
 from pynwm_upd import *
 import pynwm
+import requests
 import datetime as dt
 import pandas as pd
 
@@ -91,8 +92,8 @@ def run_fier(AOI_str, doi):
         sm = xr_RSM.spatial_modes.sel(mode=mode)
         site = xr_RSM.hydro_site[ct_mode].values
              
-        mid_fct = pynwm.data_service.MediumRange(station_id=site)
-        fct_datetime = pd.to_datetime(pd.DataFrame(mid_fct.data['mean'][0]['data'])['forecast-time'])
+        mid_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/medium_range_ensemble_mean/streamflow?&station_id='+str(site)).json()
+        fct_datetime = pd.to_datetime(pd.DataFrame(mid_fct[0]['data'])['forecast-time'])
         doi_indx0 = fct_datetime >= (dt.datetime.strptime(doi,'%Y-%m-%d'))
         doi_indx1 = (fct_datetime < (dt.datetime.strptime(doi,'%Y-%m-%d'))+dt.timedelta(days=1))
         doi_indx = doi_indx0 & doi_indx1
