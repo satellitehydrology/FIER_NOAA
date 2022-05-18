@@ -61,7 +61,7 @@ with row1_col2:
      )
 
         date = st.date_input(
-             "Select Date ("+today_datestr+" to "+last_datestr+"):",
+             "Select the date with available NWM forecast ("+today_datestr+" to "+last_datestr+" UTC):",
              value = today_date,
              min_value = today_date,
              max_value = last_date,
