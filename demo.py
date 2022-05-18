@@ -7,6 +7,7 @@ import xarray as xr
 from syn_noaa import *
 from pynwm_upd import *
 import pynwm
+import requests
 import numpy.ma as ma
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -16,9 +17,9 @@ import branca.colormap as cm
 
 today_date = datetime.date.today()
 today_datestr = today_date.strftime('%Y-%m-%d')
-exp_mid_fct = pynwm.data_service.MediumRange(station_id=7469342)
 
-exp_mid_fct_indata = exp_mid_fct.data["mean"][0]["data"]
+exp_mid_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/medium_range_ensemble_mean/streamflow?reference_time=2022051718&reach_id=7469342').json()
+exp_mid_fct_indata = exp_mid_fct[0]["data"]
 exp_mid_fct_data = pd.DataFrame(exp_mid_fct_indata)["forecast-time"]
 exp_mid_fct_time = pd.to_datetime(exp_mid_fct_data)
 
