@@ -24,6 +24,7 @@ exp_mid_fct_time = pd.to_datetime(exp_mid_fct_data)
 
 last_date = exp_mid_fct_time[len(exp_mid_fct_time)-1]
 last_datestr = last_date.strftime('%Y-%m-%d')
+st.write(last_datestr)
 
 # Page Configuration
 st.set_page_config(layout="wide")
