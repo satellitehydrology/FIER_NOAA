@@ -101,7 +101,7 @@ def run_fier(AOI_str, doi):
         print(fct_datetime[0])
         
         doi_fct_datetime = fct_datetime[doi_indx]
-        doi_fct_q = (pd.DataFrame(mid_fct.data['mean'][0]['data'])['value'][doi_indx]*0.0283168).mean()
+        doi_fct_q = (pd.DataFrame(mid_fct[0]['data'])['value'][doi_indx]*0.0283168).mean()
                         
         
 
