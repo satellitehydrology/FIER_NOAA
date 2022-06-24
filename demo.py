@@ -154,19 +154,19 @@ with row1_col2:
             except:
                 pass       
                 
-    if run_type == 'Short-Range':
-        in_run_type = 'short_range'
-        with st.form("FIER with NWM Short-Range Forecast"):        
+        if run_type == 'Short-Range':
+            in_run_type = 'short_range'
+            #with st.form("FIER with NWM Analysis Simulation"):        
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
             exp_fct_indata = exp_fct[0]["data"]
             exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
             exp_fct_time = pd.to_datetime(exp_fct_data)
-                
+
             first_date = exp_fct_time[0]
             first_datestr = first_date.strftime('%Y-%m-%d') 
             last_date = exp_fct_time[len(exp_fct_time)-1]
-            last_datestr = last_date.strftime('%Y-%m-%d')
-
+            last_datestr = last_date.strftime('%Y-%m-%d')        
+                
             date = st.date_input(
                 "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
                 value = first_date,
@@ -174,13 +174,48 @@ with row1_col2:
                 max_value = last_date,
             )
             st.write(date)                
-            AOI_str = region.replace(" ", "")
+            
             
             submitted = st.form_submit_button("Submit")
-            if submitted:   
+            if submitted:           
+                #streamlit_proc(date, AOI_str, in_run_type)    
+                AOI_str = region.replace(" ", "")                
+                st.write('Region:', region)
+                st.write('Date:', date)                                        
+                st.write(in_run_type)        
+                if region=='Mississippi River':
+                    location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
+                elif region=='Red River':
+                    location = [48.44, -97.17]
                 
-                streamlit_proc(date, AOI_str, in_run_type)   
+                m = folium.Map(
+                    zoom_start = 8,
+                    location = location,
+                    control_scale=True,
+                )                
                 
+                bounds = run_fier(AOI_str, str(date), in_run_type)                 
+       
+                folium.raster_layers.ImageOverlay(
+                    image= 'Output/water_fraction.png',
+                    # image = sar_image,
+                    bounds = bounds,
+                    opacity = 0.5,
+                    name = 'Water Fraction Map',
+                    show = True,
+                ).add_to(m)
+         
+                colormap = cm.LinearColormap(colors=['blue','green','red'],
+                               vmin=0, vmax=100,
+                               caption='Water Fraction (%)')
+                m.add_child(colormap)       
+       
+                plugins.Fullscreen(position='topright').add_to(m)
+                folium.TileLayer('Stamen Terrain').add_to(m)
+                m.add_child(folium.LatLngPopup())
+                folium.LayerControl().add_to(m)                 
+                
+       
             try:
                 with open('Output/output.nc', 'rb') as f:
                     st.download_button('Download Latest Run Output',
@@ -188,47 +223,12 @@ with row1_col2:
                     file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
                     mime= "application/netcdf")
             except:
-                pass
+                pass       
+                
               
-    if run_type == 'Medium-Range':
-        in_run_type = 'medium_range_ensemble_mean'
-        with st.form("FIER with NWM Medium-Range Forecast"):        
-            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
-            exp_fct_indata = exp_fct[0]["data"]
-            exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
-            exp_fct_time = pd.to_datetime(exp_fct_data)
-                
-            first_date = exp_fct_time[0]
-            first_datestr = first_date.strftime('%Y-%m-%d') 
-            last_date = exp_fct_time[len(exp_fct_time)-1]
-            last_datestr = last_date.strftime('%Y-%m-%d')                                
-
-            date = st.date_input(
-                "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
-                value = first_date,
-                min_value = first_date,
-                max_value = last_date,
-            )
-            st.write(date)                
-            AOI_str = region.replace(" ", "")
-            
-            submitted = st.form_submit_button("Submit")
-            if submitted:   
-                
-                streamlit_proc(date, AOI_str, in_run_type)   
-
-            try:
-                with open('Output/output.nc', 'rb') as f:
-                    st.download_button('Download Latest Run Output',
-                    f,
-                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
-                    mime= "application/netcdf")
-            except:
-                pass
-                
-    if run_type == 'Long-Range':
-        in_run_type = 'long_range_ensemble_mean'
-        with st.form("FIER with NWM Long-Range Forecast"):        
+        if run_type == 'Medium-Range':
+            in_run_type = 'medium_range_ensemble_mean'
+            #with st.form("FIER with NWM Analysis Simulation"):        
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
             exp_fct_indata = exp_fct[0]["data"]
             exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
@@ -237,8 +237,8 @@ with row1_col2:
             first_date = exp_fct_time[0]
             first_datestr = first_date.strftime('%Y-%m-%d') 
             last_date = exp_fct_time[len(exp_fct_time)-1]
-            last_datestr = last_date.strftime('%Y-%m-%d')              
-
+            last_datestr = last_date.strftime('%Y-%m-%d')        
+                
             date = st.date_input(
                 "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
                 value = first_date,
@@ -246,13 +246,48 @@ with row1_col2:
                 max_value = last_date,
             )
             st.write(date)                
-            AOI_str = region.replace(" ", "")
+            
             
             submitted = st.form_submit_button("Submit")
-            if submitted:   
+            if submitted:           
+                #streamlit_proc(date, AOI_str, in_run_type)    
+                AOI_str = region.replace(" ", "")                
+                st.write('Region:', region)
+                st.write('Date:', date)                                        
+                st.write(in_run_type)        
+                if region=='Mississippi River':
+                    location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
+                elif region=='Red River':
+                    location = [48.44, -97.17]
                 
-                streamlit_proc(date, AOI_str, in_run_type)   
-               
+                m = folium.Map(
+                    zoom_start = 8,
+                    location = location,
+                    control_scale=True,
+                )                
+                
+                bounds = run_fier(AOI_str, str(date), in_run_type)                 
+       
+                folium.raster_layers.ImageOverlay(
+                    image= 'Output/water_fraction.png',
+                    # image = sar_image,
+                    bounds = bounds,
+                    opacity = 0.5,
+                    name = 'Water Fraction Map',
+                    show = True,
+                ).add_to(m)
+         
+                colormap = cm.LinearColormap(colors=['blue','green','red'],
+                               vmin=0, vmax=100,
+                               caption='Water Fraction (%)')
+                m.add_child(colormap)       
+       
+                plugins.Fullscreen(position='topright').add_to(m)
+                folium.TileLayer('Stamen Terrain').add_to(m)
+                m.add_child(folium.LatLngPopup())
+                folium.LayerControl().add_to(m)                 
+                
+       
             try:
                 with open('Output/output.nc', 'rb') as f:
                     st.download_button('Download Latest Run Output',
@@ -260,7 +295,80 @@ with row1_col2:
                     file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
                     mime= "application/netcdf")
             except:
-                pass
+                pass       
+                
+                
+        if run_type == 'Long-Range':
+            in_run_type = 'long_range_ensemble_mean'
+            #with st.form("FIER with NWM Analysis Simulation"):        
+            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
+            exp_fct_indata = exp_fct[0]["data"]
+            exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
+            exp_fct_time = pd.to_datetime(exp_fct_data)
+
+            first_date = exp_fct_time[0]
+            first_datestr = first_date.strftime('%Y-%m-%d') 
+            last_date = exp_fct_time[len(exp_fct_time)-1]
+            last_datestr = last_date.strftime('%Y-%m-%d')        
+                
+            date = st.date_input(
+                "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
+                value = first_date,
+                min_value = first_date,
+                max_value = last_date,
+            )
+            st.write(date)                
+            
+            
+            submitted = st.form_submit_button("Submit")
+            if submitted:           
+                #streamlit_proc(date, AOI_str, in_run_type)    
+                AOI_str = region.replace(" ", "")                
+                st.write('Region:', region)
+                st.write('Date:', date)                                        
+                st.write(in_run_type)        
+                if region=='Mississippi River':
+                    location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
+                elif region=='Red River':
+                    location = [48.44, -97.17]
+                
+                m = folium.Map(
+                    zoom_start = 8,
+                    location = location,
+                    control_scale=True,
+                )                
+                
+                bounds = run_fier(AOI_str, str(date), in_run_type)                 
+       
+                folium.raster_layers.ImageOverlay(
+                    image= 'Output/water_fraction.png',
+                    # image = sar_image,
+                    bounds = bounds,
+                    opacity = 0.5,
+                    name = 'Water Fraction Map',
+                    show = True,
+                ).add_to(m)
+         
+                colormap = cm.LinearColormap(colors=['blue','green','red'],
+                               vmin=0, vmax=100,
+                               caption='Water Fraction (%)')
+                m.add_child(colormap)       
+       
+                plugins.Fullscreen(position='topright').add_to(m)
+                folium.TileLayer('Stamen Terrain').add_to(m)
+                m.add_child(folium.LatLngPopup())
+                folium.LayerControl().add_to(m)                 
+                
+       
+            try:
+                with open('Output/output.nc', 'rb') as f:
+                    st.download_button('Download Latest Run Output',
+                    f,
+                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
+                    mime= "application/netcdf")
+            except:
+                pass       
+                
             
 """
 with row1_col2:
