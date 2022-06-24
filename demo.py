@@ -17,6 +17,10 @@ def streamlit_proc(date, AOI_str, run_type):
        
     bounds = run_fier(AOI_str, str(date), run_type)
             
+    """
+    test
+    """       
+       
     folium.raster_layers.ImageOverlay(
         image= 'Output/water_fraction.png',
         # image = sar_image,
@@ -26,16 +30,28 @@ def streamlit_proc(date, AOI_str, run_type):
         show = True,
     ).add_to(m)
 
+    """
+    test
+    """   
+       
     colormap = cm.LinearColormap(colors=['blue','green','red'],
                               vmin=0, vmax=100,
                              caption='Water Fraction (%)')
     m.add_child(colormap)
-             
+
+    """
+    test
+    """        
+       
     plugins.Fullscreen(position='topright').add_to(m)
     folium.TileLayer('Stamen Terrain').add_to(m)
     m.add_child(folium.LatLngPopup())
     folium.LayerControl().add_to(m)
 
+    """
+    test
+    """        
+       
     try:
         with open('Output/output.nc', 'rb') as f:
             st.download_button('Download Latest Run Output',
