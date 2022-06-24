@@ -122,9 +122,23 @@ with row1_col2:
             if submitted:           
                                  
                 #streamlit_proc(date, AOI_str, in_run_type)                                                     
+    
+                if region=='Mississippi River':
+                    location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
+                elif region=='Red River':
+                    location = [48.44, -97.17]
                 
+                m = folium.Map(
+                        zoom_start = 8,
+                        location = location,
+                        control_scale=True,
+                ) 
+    
+    
                 bounds = run_fier('MississippiRiver', str(date), in_run_type)                 
       
+    
+    
                 folium.raster_layers.ImageOverlay(
                     image= 'Output/water_fraction.png',
                     # image = sar_image,
