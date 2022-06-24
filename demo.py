@@ -122,7 +122,8 @@ with row1_col2:
             st.write(date)                
             st.write(AOI_str)
             submitted = st.form_submit_button("Submit")
-            if submitted:                            
+            if submitted:           
+                AOI_str='MississippiRiver'
                 #streamlit_proc(date, AOI_str, in_run_type)    
                 st.write(AOI_str)
                 st.write(str(date))
