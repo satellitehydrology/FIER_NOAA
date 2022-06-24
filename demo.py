@@ -125,9 +125,6 @@ with row1_col2:
             if submitted:           
                 AOI_str='MississippiRiver'
                 #streamlit_proc(date, AOI_str, in_run_type)    
-                st.write(AOI_str)
-                st.write(str(date))
-                st.write(in_run_type)
                 
                 bounds = run_fier(AOI_str, str(date), in_run_type)                 
        
@@ -151,14 +148,14 @@ with row1_col2:
                 m.add_child(folium.LatLngPopup())
                 folium.LayerControl().add_to(m)       
        
-                try:
-                    with open('Output/output.nc', 'rb') as f:
-                        st.download_button('Download Latest Run Output',
-                        f,
-                        file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
-                        mime= "application/netcdf")
-                except:
-                    pass       
+            try:
+                with open('Output/output.nc', 'rb') as f:
+                    st.download_button('Download Latest Run Output',
+                    f,
+                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
+                    mime= "application/netcdf")
+            except:
+                pass       
                 
     if run_type == 'Short-Range':
         in_run_type = 'short_range'
