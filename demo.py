@@ -135,7 +135,7 @@ with row1_col2:
                 ) 
     
     
-                bounds = run_fier('MississippiRiver', str(date), in_run_type)                 
+                bounds = run_fier(AOI_str, str(date), in_run_type)                 
       
     
     
