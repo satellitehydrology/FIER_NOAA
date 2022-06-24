@@ -13,9 +13,9 @@ import datetime
 import branca
 import branca.colormap as cm
 
-def streamlit_proc(date, AOI_str, run_type):
+def streamlit_proc(date, AOI_str, in_run_type):
        
-    bounds = run_fier(AOI_str, str(date), run_type)
+    bounds = run_fier(AOI_str, str(date), in_run_type)
             
     """
     test
