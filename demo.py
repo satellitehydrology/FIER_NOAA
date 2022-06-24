@@ -106,7 +106,7 @@ with row1_col2:
 
             submitted = st.form_submit_button("Submit")
             if submitted:           
-                #streamlit_proc(date, AOI_str, in_run_type)                                           
+                streamlit_proc(date, AOI_str, in_run_type)                                           
        
             try:
                 with open('Output/output.nc', 'rb') as f:
