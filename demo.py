@@ -94,19 +94,17 @@ with row1_col2:
             first_date = exp_fct_time[0]
             first_datestr = first_date.strftime('%Y-%m-%d') 
             last_date = exp_fct_time[len(exp_fct_time)-1]
-            last_datestr = last_date.strftime('%Y-%m-%d')        
-                
-            date = st.date_input(
-                "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
-                value = first_date,
-                min_value = first_date,
-                max_value = last_date,
-            )
-            st.write(date)                
-            
+            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
             
             submitted = st.form_submit_button("Submit")
             if submitted:           
+                date = st.date_input(
+                    "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
+                    value = first_date,
+                    min_value = first_date,
+                    max_value = last_date,
+                )
+                                 
                 #streamlit_proc(date, AOI_str, in_run_type)    
                 AOI_str = region.replace(" ", "")                
                 st.write('Region:', region)
@@ -165,19 +163,17 @@ with row1_col2:
             first_date = exp_fct_time[0]
             first_datestr = first_date.strftime('%Y-%m-%d') 
             last_date = exp_fct_time[len(exp_fct_time)-1]
-            last_datestr = last_date.strftime('%Y-%m-%d')        
-                
-            date = st.date_input(
-                "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
-                value = first_date,
-                min_value = first_date,
-                max_value = last_date,
-            )
-            st.write(date)                
-            
-            
+            last_datestr = last_date.strftime('%Y-%m-%d')                                       
+                        
             submitted = st.form_submit_button("Submit")
             if submitted:           
+                date = st.date_input(
+                    "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
+                    value = first_date,
+                    min_value = first_date,
+                    max_value = last_date,
+                )                
+                
                 #streamlit_proc(date, AOI_str, in_run_type)    
                 AOI_str = region.replace(" ", "")                
                 st.write('Region:', region)
