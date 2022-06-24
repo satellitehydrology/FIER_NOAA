@@ -114,8 +114,9 @@ with row1_col2:
             
     run_type = st.radio('Run type:', ('Analysis Simulation','Short-Range', 'Medium-Range','Long-Range'))
     if run_type == 'Analysis Simulation':
+        in_run_type = 'analysis_assim'
         with st.form("FIER with NWM Analysis Simulation"):        
-            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/analysis_assim/streamflow?&station_id=7469342').json()
+            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
             exp_fct_indata = exp_fct[0]["data"]
             exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
             exp_fct_time = pd.to_datetime(exp_fct_data)
@@ -135,47 +136,13 @@ with row1_col2:
 
             submitted = st.form_submit_button("Submit")
             if submitted:                            
-            #    streamlit_proc(date, AOI_str, run_type)    
-       
-                bounds = run_fier(AOI_str, str(date), run_type)
-     
-       
-                folium.raster_layers.ImageOverlay(
-                    image= 'Output/water_fraction.png',
-                    # image = sar_image,
-                    bounds = bounds,
-                    opacity = 0.5,
-                    name = 'Water Fraction Map',
-                    show = True,
-                ).add_to(m)
-  
-       
-                colormap = cm.LinearColormap(colors=['blue','green','red'],
-                              vmin=0, vmax=100,
-                             caption='Water Fraction (%)')
-                m.add_child(colormap)
-      
-       
-                plugins.Fullscreen(position='topright').add_to(m)
-                folium.TileLayer('Stamen Terrain').add_to(m)
-                m.add_child(folium.LatLngPopup())
-                folium.LayerControl().add_to(m)
-
-       
-       
-                try:
-                    with open('Output/output.nc', 'rb') as f:
-                        st.download_button('Download Latest Run Output',
-                        f,
-                        file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
-                        mime= "application/netcdf")
-                except:
-                    pass       
+                streamlit_proc(date, AOI_str, in_run_type)    
        
                 
     if run_type == 'Short-Range':
+        in_run_type = 'short_range'
         with st.form("FIER with NWM Short-Range Forecast"):        
-            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/short_range/streamflow?&station_id=7469342').json()
+            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
             exp_fct_indata = exp_fct[0]["data"]
             exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
             exp_fct_time = pd.to_datetime(exp_fct_data)
@@ -195,11 +162,12 @@ with row1_col2:
                 
             submitted = st.form_submit_button("Submit")
             if submitted:                            
-                streamlit_proc(date, AOI_str, run_type)   
+                streamlit_proc(date, AOI_str, in_run_type)   
               
     if run_type == 'Medium-Range':
+        in_run_type = 'medium_range_ensemble_mean'
         with st.form("FIER with NWM Medium-Range Forecast"):        
-            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/medium_range_ensemble_mean/streamflow?&station_id=7469342').json()
+            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
             exp_fct_indata = exp_fct[0]["data"]
             exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
             exp_fct_time = pd.to_datetime(exp_fct_data)
@@ -219,11 +187,12 @@ with row1_col2:
               
             submitted = st.form_submit_button("Submit")
             if submitted:                            
-                streamlit_proc(date, AOI_str, run_type)    
+                streamlit_proc(date, AOI_str, in_run_type)    
               
     if run_type == 'Long-Range':
+        in_run_type = 'long_range_ensemble_mean'
         with st.form("FIER with NWM Long-Range Forecast"):        
-            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/long_range_ensemble_mean/streamflow?&station_id=7469342').json()
+            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
             exp_fct_indata = exp_fct[0]["data"]
             exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
             exp_fct_time = pd.to_datetime(exp_fct_data)
@@ -243,7 +212,7 @@ with row1_col2:
               
             submitted = st.form_submit_button("Submit")
             if submitted:                            
-                streamlit_proc(date, AOI_str, run_type)    
+                streamlit_proc(date, AOI_str, in_run_type)    
                
 
 """
