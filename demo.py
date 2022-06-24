@@ -13,6 +13,46 @@ import datetime
 import branca
 import branca.colormap as cm
 
+def streamlit_proc(first_datestr, last_datestr, AOI_str, run_type):
+    date = st.date_input(
+         "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
+         value = first_date,
+         min_value = first_date,
+         max_value = last_date,
+         )
+    #st.write(date)
+       
+    submitted = st.form_submit_button("Submit")
+    if submitted:
+        bounds = run_fier(AOI_str, str(date), run_type)
+            
+        folium.raster_layers.ImageOverlay(
+            image= 'Output/water_fraction.png',
+            # image = sar_image,
+            bounds = bounds,
+            opacity = 0.5,
+            name = 'Water Fraction Map',
+            show = True,
+        ).add_to(m)
+
+        colormap = cm.LinearColormap(colors=['blue','green','red'],
+                                  vmin=0, vmax=100,
+                                 caption='Water Fraction (%)')
+        m.add_child(colormap)
+             
+        plugins.Fullscreen(position='topright').add_to(m)
+        folium.TileLayer('Stamen Terrain').add_to(m)
+        m.add_child(folium.LatLngPopup())
+        folium.LayerControl().add_to(m)
+
+    try:
+        with open('Output/output.nc', 'rb') as f:
+            st.download_button('Download Latest Run Output',
+            f,
+            file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
+            mime= "application/netcdf")
+    except:
+        pass
 
 
 # Page Configuration
@@ -78,6 +118,8 @@ with row1_col2:
             last_date = exp_fct_time[len(exp_fct_time)-1]
             last_datestr = last_date.strftime('%Y-%m-%d')        
                 
+            streamlit_proc(first_datestr, last_datestr, AOI_str, run_type)    
+                
     if run_type == 'Short-Range':
         with st.form("FIER with NWM Short-Range Forecast"):        
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/short_range/streamflow?&station_id=7469342').json()
@@ -89,7 +131,9 @@ with row1_col2:
             first_datestr = first_date.strftime('%Y-%m-%d') 
             last_date = exp_fct_time[len(exp_fct_time)-1]
             last_datestr = last_date.strftime('%Y-%m-%d')
-                        
+
+            streamlit_proc(first_datestr, last_datestr, AOI_str, run_type)                
+            
     if run_type == 'Medium-Range':
         with st.form("FIER with NWM Medium-Range Forecast"):        
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/medium_range_ensemble_mean/streamflow?&station_id=7469342').json()
@@ -101,7 +145,9 @@ with row1_col2:
             first_datestr = first_date.strftime('%Y-%m-%d') 
             last_date = exp_fct_time[len(exp_fct_time)-1]
             last_datestr = last_date.strftime('%Y-%m-%d')                                
-                
+
+            streamlit_proc(first_datestr, last_datestr, AOI_str, run_type)                
+            
     if run_type == 'Long-Range':
         with st.form("FIER with NWM Long-Range Forecast"):        
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/long_range_ensemble_mean/streamflow?&station_id=7469342').json()
@@ -113,49 +159,10 @@ with row1_col2:
             first_datestr = first_date.strftime('%Y-%m-%d') 
             last_date = exp_fct_time[len(exp_fct_time)-1]
             last_datestr = last_date.strftime('%Y-%m-%d')              
-                      
-    date = st.date_input(
-         "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
-         value = first_date,
-         min_value = first_date,
-         max_value = last_date,
-         )
-    #st.write(date)
-       
-    submitted = st.form_submit_button("Submit")
-    if submitted:
-        bounds = run_fier(AOI_str, str(date), run_type)
-            
-        folium.raster_layers.ImageOverlay(
-            image= 'Output/water_fraction.png',
-            # image = sar_image,
-            bounds = bounds,
-            opacity = 0.5,
-            name = 'Water Fraction Map',
-            show = True,
-        ).add_to(m)
 
-        colormap = cm.LinearColormap(colors=['blue','green','red'],
-                                  vmin=0, vmax=100,
-                                 caption='Water Fraction (%)')
-        m.add_child(colormap)
-             
-        plugins.Fullscreen(position='topright').add_to(m)
-        folium.TileLayer('Stamen Terrain').add_to(m)
-        m.add_child(folium.LatLngPopup())
-        folium.LayerControl().add_to(m)
+            streamlit_proc(first_datestr, last_datestr, AOI_str, run_type)             
 
-    try:
-        with open('Output/output.nc', 'rb') as f:
-            st.download_button('Download Latest Run Output',
-            f,
-            file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
-            mime= "application/netcdf")
-    except:
-        pass
                
-    
-
 
 """
 with row1_col2:
