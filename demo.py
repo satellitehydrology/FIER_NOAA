@@ -13,10 +13,21 @@ import datetime
 import branca
 import branca.colormap as cm
 
-def streamlit_proc(date, AOI_str, in_run_type):
-    st.write(date)
-    st.write(AOI_str)
-    st.write(in_run_type)
+def streamlit_proc(date, AOI_str, in_run_type):    
+    st.write('Region:', region)
+    st.write('Date:', date)                                        
+    st.write(in_run_type)        
+    if region=='Mississippi River':
+        location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
+    elif region=='Red River':
+        location = [48.44, -97.17]
+                
+    m = folium.Map(
+        zoom_start = 8,
+        location = location,
+        control_scale=True,
+    )                
+                
     bounds = run_fier(AOI_str, str(date), in_run_type)                 
        
     folium.raster_layers.ImageOverlay(
@@ -27,17 +38,16 @@ def streamlit_proc(date, AOI_str, in_run_type):
         name = 'Water Fraction Map',
         show = True,
     ).add_to(m)
-  
-       
+         
     colormap = cm.LinearColormap(colors=['blue','green','red'],
-                              vmin=0, vmax=100,
-                             caption='Water Fraction (%)')
+                   vmin=0, vmax=100,
+                   caption='Water Fraction (%)')
     m.add_child(colormap)       
        
     plugins.Fullscreen(position='topright').add_to(m)
     folium.TileLayer('Stamen Terrain').add_to(m)
     m.add_child(folium.LatLngPopup())
-    folium.LayerControl().add_to(m)       
+    folium.LayerControl().add_to(m)      
 
 
 # Page Configuration
@@ -96,43 +106,7 @@ with row1_col2:
 
             submitted = st.form_submit_button("Submit")
             if submitted:           
-                AOI_str = region.replace(" ", "")
-                st.write('Region:', region)
-                st.write('Date:', date)                                        
-                        
-                if region=='Mississippi River':
-                    location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
-                elif region=='Red River':
-                    location = [48.44, -97.17]
-                
-                m = folium.Map(
-                    zoom_start = 8,
-                    location = location,
-                    control_scale=True,
-                )                
-                #streamlit_proc(date, AOI_str, in_run_type)    
-                
-                bounds = run_fier(AOI_str, str(date), in_run_type)                 
-       
-                folium.raster_layers.ImageOverlay(
-                    image= 'Output/water_fraction.png',
-                    # image = sar_image,
-                    bounds = bounds,
-                    opacity = 0.5,
-                    name = 'Water Fraction Map',
-                    show = True,
-                ).add_to(m)
-  
-       
-                colormap = cm.LinearColormap(colors=['blue','green','red'],
-                                          vmin=0, vmax=100,
-                                          caption='Water Fraction (%)')
-                m.add_child(colormap)       
-       
-                plugins.Fullscreen(position='topright').add_to(m)
-                folium.TileLayer('Stamen Terrain').add_to(m)
-                m.add_child(folium.LatLngPopup())
-                folium.LayerControl().add_to(m)       
+                #streamlit_proc(date, AOI_str, in_run_type)                                           
        
             try:
                 with open('Output/output.nc', 'rb') as f:
@@ -163,10 +137,21 @@ with row1_col2:
                 max_value = last_date,
             )
             st.write(date)                
-                
+            AOI_str = region.replace(" ", "")
+            
             submitted = st.form_submit_button("Submit")
-            if submitted:                            
+            if submitted:   
+                
                 streamlit_proc(date, AOI_str, in_run_type)   
+                
+            try:
+                with open('Output/output.nc', 'rb') as f:
+                    st.download_button('Download Latest Run Output',
+                    f,
+                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
+                    mime= "application/netcdf")
+            except:
+                pass
               
     if run_type == 'Medium-Range':
         in_run_type = 'medium_range_ensemble_mean'
@@ -187,12 +172,23 @@ with row1_col2:
                 min_value = first_date,
                 max_value = last_date,
             )
-            st.write(date)      
-              
+            st.write(date)                
+            AOI_str = region.replace(" ", "")
+            
             submitted = st.form_submit_button("Submit")
-            if submitted:                            
-                streamlit_proc(date, AOI_str, in_run_type)    
-              
+            if submitted:   
+                
+                streamlit_proc(date, AOI_str, in_run_type)   
+
+            try:
+                with open('Output/output.nc', 'rb') as f:
+                    st.download_button('Download Latest Run Output',
+                    f,
+                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
+                    mime= "application/netcdf")
+            except:
+                pass
+                
     if run_type == 'Long-Range':
         in_run_type = 'long_range_ensemble_mean'
         with st.form("FIER with NWM Long-Range Forecast"):        
@@ -212,13 +208,23 @@ with row1_col2:
                 min_value = first_date,
                 max_value = last_date,
             )
-            st.write(date)              
-              
+            st.write(date)                
+            AOI_str = region.replace(" ", "")
+            
             submitted = st.form_submit_button("Submit")
-            if submitted:                            
-                streamlit_proc(date, AOI_str, in_run_type)    
+            if submitted:   
+                
+                streamlit_proc(date, AOI_str, in_run_type)   
                
-
+            try:
+                with open('Output/output.nc', 'rb') as f:
+                    st.download_button('Download Latest Run Output',
+                    f,
+                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
+                    mime= "application/netcdf")
+            except:
+                pass
+            
 """
 with row1_col2:
     st.subheader('Determine Region of Interest')
