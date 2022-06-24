@@ -103,11 +103,47 @@ with row1_col2:
                 max_value = last_date,
             )
             st.write(date)                
-            AOI_str = region.replace(" ", "")
+            
             
             submitted = st.form_submit_button("Submit")
             if submitted:           
-                streamlit_proc(date, AOI_str, in_run_type)                                           
+                #streamlit_proc(date, AOI_str, in_run_type)    
+                AOI_str = region.replace(" ", "")                
+                st.write('Region:', region)
+                st.write('Date:', date)                                        
+                st.write(in_run_type)        
+                if region=='MississippiRiver':
+                    location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
+                elif region=='RedRiver':
+                    location = [48.44, -97.17]
+                
+                m = folium.Map(
+                    zoom_start = 8,
+                    location = location,
+                    control_scale=True,
+                )                
+                
+                bounds = run_fier(AOI_str, str(date), in_run_type)                 
+       
+                folium.raster_layers.ImageOverlay(
+                    image= 'Output/water_fraction.png',
+                    # image = sar_image,
+                    bounds = bounds,
+                    opacity = 0.5,
+                    name = 'Water Fraction Map',
+                    show = True,
+                ).add_to(m)
+         
+                colormap = cm.LinearColormap(colors=['blue','green','red'],
+                               vmin=0, vmax=100,
+                               caption='Water Fraction (%)')
+                m.add_child(colormap)       
+       
+                plugins.Fullscreen(position='topright').add_to(m)
+                folium.TileLayer('Stamen Terrain').add_to(m)
+                m.add_child(folium.LatLngPopup())
+                folium.LayerControl().add_to(m)                 
+                
        
             try:
                 with open('Output/output.nc', 'rb') as f:
