@@ -135,7 +135,43 @@ with row1_col2:
 
             submitted = st.form_submit_button("Submit")
             if submitted:                            
-                streamlit_proc(date, AOI_str, run_type)    
+            #    streamlit_proc(date, AOI_str, run_type)    
+       
+                bounds = run_fier(AOI_str, str(date), run_type)
+     
+       
+                folium.raster_layers.ImageOverlay(
+                    image= 'Output/water_fraction.png',
+                    # image = sar_image,
+                    bounds = bounds,
+                    opacity = 0.5,
+                    name = 'Water Fraction Map',
+                    show = True,
+                ).add_to(m)
+  
+       
+                colormap = cm.LinearColormap(colors=['blue','green','red'],
+                              vmin=0, vmax=100,
+                             caption='Water Fraction (%)')
+                m.add_child(colormap)
+      
+       
+                plugins.Fullscreen(position='topright').add_to(m)
+                folium.TileLayer('Stamen Terrain').add_to(m)
+                m.add_child(folium.LatLngPopup())
+                folium.LayerControl().add_to(m)
+
+       
+       
+                try:
+                    with open('Output/output.nc', 'rb') as f:
+                        st.download_button('Download Latest Run Output',
+                        f,
+                        file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
+                        mime= "application/netcdf")
+                except:
+                    pass       
+       
                 
     if run_type == 'Short-Range':
         with st.form("FIER with NWM Short-Range Forecast"):        
