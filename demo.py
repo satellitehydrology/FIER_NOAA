@@ -80,23 +80,8 @@ with row1_col2:
         region = st.selectbox(
             'Determine region:',
             ('Mississippi River', 'Red River'),
-        )       
-        
-        submitted = st.form_submit_button("Submit")
-        if submitted:    
-            AOI_str = region.replace(" ", "")
-            st.write('Region:', region)    
-            if region=='Mississippi River':
-                location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
-            elif region=='Red River':
-                location = [48.44, -97.17]
-                
-            m = folium.Map(
-                    zoom_start = 8,
-                    location = location,
-                    control_scale=True,
-            )                                    
-                        
+        )                  
+                                                            
         run_type = st.radio('Run type:', ('Analysis Simulation','Short-Range', 'Medium-Range','Long-Range'))
         if run_type == 'Analysis Simulation':
             in_run_type = 'analysis_assim'
@@ -110,21 +95,62 @@ with row1_col2:
             first_datestr = first_date.strftime('%Y-%m-%d') 
             last_date = exp_fct_time[len(exp_fct_time)-1]
             last_datestr = last_date.strftime('%Y-%m-%d')                                                   
+
+        elif run_type == 'Short-Range':
+            in_run_type = 'short_range'
+            #with st.form("FIER with NWM Analysis Simulation"):
+            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
+            exp_fct_indata = exp_fct[0]["data"]
+            exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
+            exp_fct_time = pd.to_datetime(exp_fct_data)
+
+            first_date = exp_fct_time[0]
+            first_datestr = first_date.strftime('%Y-%m-%d') 
+            last_date = exp_fct_time[len(exp_fct_time)-1]
+            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
+                  
+     
+        elif run_type == 'Medium-Range':
+            in_run_type = 'medium_range_ensemble_mean'   
+            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
+            exp_fct_indata = exp_fct[0]["data"]
+            exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
+            exp_fct_time = pd.to_datetime(exp_fct_data)
+
+            first_date = exp_fct_time[0]
+            first_datestr = first_date.strftime('%Y-%m-%d') 
+            last_date = exp_fct_time[len(exp_fct_time)-1]
+            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
             
-            date = st.date_input(
-                "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
-                value = first_date,
-                min_value = first_date,
-                max_value = last_date,
-            )            
+               
+                
+        elif run_type == 'Long-Range':
+            in_run_type = 'long_range_ensemble_mean'
+            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
+            exp_fct_indata = exp_fct[0]["data"]
+            exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
+            exp_fct_time = pd.to_datetime(exp_fct_data)
+
+            first_date = exp_fct_time[0]
+            first_datestr = first_date.strftime('%Y-%m-%d') 
+            last_date = exp_fct_time[len(exp_fct_time)-1]
+            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
+                        
             
-            submitted = st.form_submit_button("Submit")
-            if submitted:           
+        date = st.date_input(
+            "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
+            value = first_date,
+            min_value = first_date,
+            max_value = last_date,
+        )            
+                        
+        submitted = st.form_submit_button("Submit")
+        if submitted:           
                                  
                 #streamlit_proc(date, AOI_str, in_run_type)                                                         
+                AOI_str = region.replace(" ", "")    
     
-    
-                bounds = run_fier('MississippiRiver', str(date), in_run_type)                 
+                bounds = run_fier(AOI_str, str(date), in_run_type)                 
                          
                 if region=='Mississippi River':
                     location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
@@ -166,63 +192,7 @@ with row1_col2:
             except:
                 pass       
                 
-        if run_type == 'Short-Range':
-            in_run_type = 'short_range'
-            with st.form("FIER with NWM Analysis Simulation"):
-            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
-            exp_fct_indata = exp_fct[0]["data"]
-            exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
-            exp_fct_time = pd.to_datetime(exp_fct_data)
-
-            first_date = exp_fct_time[0]
-            first_datestr = first_date.strftime('%Y-%m-%d') 
-            last_date = exp_fct_time[len(exp_fct_time)-1]
-            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
-            
-            date = st.date_input(
-                "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
-                value = first_date,
-                min_value = first_date,
-                max_value = last_date,
-            )       
-     
-        if run_type == 'Medium-Range':
-            in_run_type = 'medium_range_ensemble_mean'   
-            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
-            exp_fct_indata = exp_fct[0]["data"]
-            exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
-            exp_fct_time = pd.to_datetime(exp_fct_data)
-
-            first_date = exp_fct_time[0]
-            first_datestr = first_date.strftime('%Y-%m-%d') 
-            last_date = exp_fct_time[len(exp_fct_time)-1]
-            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
-            
-            date = st.date_input(
-                "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
-                value = first_date,
-                min_value = first_date,
-                max_value = last_date,
-            )                 
-                
-        if run_type == 'Long-Range':
-            in_run_type = 'long_range_ensemble_mean'
-            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
-            exp_fct_indata = exp_fct[0]["data"]
-            exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
-            exp_fct_time = pd.to_datetime(exp_fct_data)
-
-            first_date = exp_fct_time[0]
-            first_datestr = first_date.strftime('%Y-%m-%d') 
-            last_date = exp_fct_time[len(exp_fct_time)-1]
-            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
-            
-            date = st.date_input(
-                "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
-                value = first_date,
-                min_value = first_date,
-                max_value = last_date,
-            ) 
+ 
                 
             
 """
