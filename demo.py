@@ -103,7 +103,8 @@ with row1_col2:
                 max_value = last_date,
             )
             st.write(date)                
-
+            AOI_str = region.replace(" ", "")
+            
             submitted = st.form_submit_button("Submit")
             if submitted:           
                 streamlit_proc(date, AOI_str, in_run_type)                                           
