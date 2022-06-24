@@ -124,6 +124,8 @@ with row1_col2:
             submitted = st.form_submit_button("Submit")
             if submitted:                            
                 #streamlit_proc(date, AOI_str, in_run_type)    
+                st.write(AOI_str, str(date), in_run_type)
+                
                 bounds = run_fier(AOI_str, str(date), in_run_type)                 
        
                 folium.raster_layers.ImageOverlay(
