@@ -14,12 +14,12 @@ import branca
 import branca.colormap as cm
 
 def streamlit_proc(date, AOI_str, in_run_type):    
-    st.write('Region:', region)
+    st.write('Region:', AOI_str)
     st.write('Date:', date)                                        
     st.write(in_run_type)        
-    if region=='Mississippi River':
+    if AOI_str=='MississippiRiver':
         location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
-    elif region=='Red River':
+    elif AOI_str=='RedRiver':
         location = [48.44, -97.17]
                 
     m = folium.Map(
