@@ -120,7 +120,7 @@ with row1_col2:
                 max_value = last_date,
             )
             st.write(date)                
-            st.write(AOI_str)
+
             submitted = st.form_submit_button("Submit")
             if submitted:           
                 AOI_str='MississippiRiver'
