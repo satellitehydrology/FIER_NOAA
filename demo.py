@@ -82,9 +82,20 @@ with row1_col2:
             ('Mississippi River', 'Red River'),
         )       
         
-#        submitted = st.form_submit_button("Submit")
-#        if submitted:    
-                                    
+        submitted = st.form_submit_button("Submit")
+        if submitted:    
+            AOI_str = region.replace(" ", "")
+            st.write('Region:', region)    
+            if region=='Mississippi River':
+                location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
+            elif region=='Red River':
+                location = [48.44, -97.17]
+                
+            m = folium.Map(
+                    zoom_start = 8,
+                    location = location,
+                    control_scale=True,
+            )                                    
                         
     run_type = st.radio('Run type:', ('Analysis Simulation','Short-Range', 'Medium-Range','Long-Range'))
     if run_type == 'Analysis Simulation':
@@ -110,20 +121,7 @@ with row1_col2:
             submitted = st.form_submit_button("Submit")
             if submitted:           
                                  
-                    #streamlit_proc(date, AOI_str, in_run_type)                                                     
-    
-                AOI_str = region.replace(" ", "")
-                st.write('Region:', region)    
-                if region=='Mississippi River':
-                    location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
-                elif region=='Red River':
-                    location = [48.44, -97.17]
-                
-                m = folium.Map(
-                        zoom_start = 8,
-                        location = location,
-                        control_scale=True,
-                )
+                #streamlit_proc(date, AOI_str, in_run_type)                                                         
     
     
                 bounds = run_fier(AOI_str, str(date), in_run_type)                 
