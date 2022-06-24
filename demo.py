@@ -183,14 +183,14 @@ with row1_col2:
                 folium.LayerControl().add_to(m)                 
                 
        
-            try:
-                with open('Output/output.nc', 'rb') as f:
-                    st.download_button('Download Latest Run Output',
-                    f,
-                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
-                    mime= "application/netcdf")
-            except:
-                pass       
+                try:
+                    with open('Output/output.nc', 'rb') as f:
+                        st.download_button('Download Latest Run Output',
+                        f,
+                        file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
+                        mime= "application/netcdf")
+                except:
+                    pass       
                 
  
                 
