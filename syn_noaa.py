@@ -67,7 +67,7 @@ def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
 
     return map_syn
 
-def run_fier(AOI_str, doi, run_type):
+def run_fier(AOI_str, doi, in_run_type):
 
     # Path to read ncecesary data
     TF_model_path = 'AOI/'+AOI_str+'/TF_model/'
@@ -90,7 +90,7 @@ def run_fier(AOI_str, doi, run_type):
         sm = xr_RSM.spatial_modes.sel(mode=mode)
         site = xr_RSM.hydro_site[ct_mode].values
              
-        exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+run_type+'/streamflow?&station_id='+str(site)).json()
+        exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id='+str(site)).json()
         fct_datetime = pd.to_datetime(pd.DataFrame(exp_fct[0]['data'])['forecast-time'])
         doi_indx0 = fct_datetime >= (dt.datetime.strptime(doi,'%Y-%m-%d'))
         doi_indx1 = (fct_datetime < (dt.datetime.strptime(doi,'%Y-%m-%d'))+dt.timedelta(days=1))
