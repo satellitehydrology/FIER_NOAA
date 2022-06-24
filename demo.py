@@ -112,9 +112,9 @@ with row1_col2:
                 st.write('Region:', region)
                 st.write('Date:', date)                                        
                 st.write(in_run_type)        
-                if region=='MississippiRiver':
+                if region=='Mississippi River':
                     location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
-                elif region=='RedRiver':
+                elif region=='Red River':
                     location = [48.44, -97.17]
                 
                 m = folium.Map(
