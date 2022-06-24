@@ -97,76 +97,67 @@ with row1_col2:
                     control_scale=True,
             )                                    
                         
-    run_type = st.radio('Run type:', ('Analysis Simulation','Short-Range', 'Medium-Range','Long-Range'))
-    if run_type == 'Analysis Simulation':
-        in_run_type = 'analysis_assim'
-        with st.form("FIER with NWM Analysis Simulation"):        
-            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
-            exp_fct_indata = exp_fct[0]["data"]
-            exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
-            exp_fct_time = pd.to_datetime(exp_fct_data)
+            run_type = st.radio('Run type:', ('Analysis Simulation','Short-Range', 'Medium-Range','Long-Range'))
+            if run_type == 'Analysis Simulation':
+                in_run_type = 'analysis_assim'
+                with st.form("FIER with NWM Analysis Simulation"):        
+                    exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
+                    exp_fct_indata = exp_fct[0]["data"]
+                    exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
+                    exp_fct_time = pd.to_datetime(exp_fct_data)
 
-            first_date = exp_fct_time[0]
-            first_datestr = first_date.strftime('%Y-%m-%d') 
-            last_date = exp_fct_time[len(exp_fct_time)-1]
-            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
+                    first_date = exp_fct_time[0]
+                    first_datestr = first_date.strftime('%Y-%m-%d') 
+                    last_date = exp_fct_time[len(exp_fct_time)-1]
+                    last_datestr = last_date.strftime('%Y-%m-%d')                                                   
             
-            date = st.date_input(
-                "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
-                value = first_date,
-                min_value = first_date,
-                max_value = last_date,
-            )            
+                    date = st.date_input(
+                        "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
+                        value = first_date,
+                        min_value = first_date,
+                        max_value = last_date,
+                    )            
             
-            submitted = st.form_submit_button("Submit")
-            if submitted:           
+                    submitted = st.form_submit_button("Submit")
+                    if submitted:           
                                  
-                #streamlit_proc(date, AOI_str, in_run_type)                                                     
+                        #streamlit_proc(date, AOI_str, in_run_type)                                                     
     
-                if region=='Mississippi River':
-                    location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
-                elif region=='Red River':
-                    location = [48.44, -97.17]
-                
-                m = folium.Map(
-                        zoom_start = 8,
-                        location = location,
-                        control_scale=True,
-                ) 
+
     
     
-                bounds = run_fier(AOI_str, str(date), in_run_type)                 
+                        bounds = run_fier(AOI_str, str(date), in_run_type)                 
       
     
     
-                folium.raster_layers.ImageOverlay(
-                    image= 'Output/water_fraction.png',
-                    # image = sar_image,
-                    bounds = bounds,
-                    opacity = 0.5,
-                    name = 'Water Fraction Map',
-                    show = True,
-                ).add_to(m)
-         
-                colormap = cm.LinearColormap(colors=['blue','green','red'],
-                               vmin=0, vmax=100,
-                               caption='Water Fraction (%)')
-                m.add_child(colormap)       
+                        folium.raster_layers.ImageOverlay(
+                            image= 'Output/water_fraction.png',
+                            # image = sar_image,
+                            bounds = bounds,
+                            opacity = 0.5,
+                            name = 'Water Fraction Map',
+                            show = True,
+                        ).add_to(m)
+                 
+                        colormap = cm.LinearColormap(colors=['blue','green','red'],
+                                       vmin=0, vmax=100,
+                                       caption='Water Fraction (%)')
+                        m.add_child(colormap)       
        
-                plugins.Fullscreen(position='topright').add_to(m)
-                folium.TileLayer('Stamen Terrain').add_to(m)
-                m.add_child(folium.LatLngPopup())
-                folium.LayerControl().add_to(m)                 
+                        plugins.Fullscreen(position='topright').add_to(m)
+                        folium.TileLayer('Stamen Terrain').add_to(m)
+                        m.add_child(folium.LatLngPopup())
+                        folium.LayerControl().add_to(m)                 
                 
        
-            try:
-                with open('Output/output.nc', 'rb') as f:
-                    st.download_button('Download Latest Run Output',
-                    f,
-                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
-                    mime= "application/netcdf")
-            except:
-                pass       
+                    try:
+                        with open('Output/output.nc', 'rb') as f:
+                            st.download_button('Download Latest Run Output',
+                            f,
+                            file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
+                            mime= "application/netcdf")
+                    except:
+                        pass       
                 
         #if run_type == 'Short-Range':
         #    in_run_type = 'short_range'
