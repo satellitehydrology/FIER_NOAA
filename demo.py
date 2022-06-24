@@ -83,7 +83,7 @@ with row1_col2:
         if submitted:
             AOI_str = region.replace(" ", "")
             st.write('Region:', region)
-            st.write('Date:', date)                                        
+            #st.write('Date:', date)                                        
             
 
             
@@ -117,7 +117,7 @@ with row1_col2:
                 min_value = first_date,
                 max_value = last_date,
             )
-            #st.write(date)                
+            st.write(date)                
                 
             streamlit_proc(date, AOI_str, run_type)    
                 
@@ -139,7 +139,7 @@ with row1_col2:
                 min_value = first_date,
                 max_value = last_date,
             )
-            #st.write(date)                
+            st.write(date)                
                 
             streamlit_proc(date, AOI_str, run_type)              
     if run_type == 'Medium-Range':
@@ -160,7 +160,7 @@ with row1_col2:
                 min_value = first_date,
                 max_value = last_date,
             )
-            #st.write(date)                
+            st.write(date)                
                 
             streamlit_proc(date, AOI_str, run_type)              
     if run_type == 'Long-Range':
@@ -181,7 +181,7 @@ with row1_col2:
                 min_value = first_date,
                 max_value = last_date,
             )
-            #st.write(date)                
+            st.write(date)                
                 
             streamlit_proc(date, AOI_str, run_type)  
                
