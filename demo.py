@@ -166,17 +166,62 @@ with row1_col2:
             except:
                 pass       
                 
-        #if run_type == 'Short-Range':
-        #    in_run_type = 'short_range'
-      
+        if run_type == 'Short-Range':
+            in_run_type = 'short_range'
+            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
+            exp_fct_indata = exp_fct[0]["data"]
+            exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
+            exp_fct_time = pd.to_datetime(exp_fct_data)
+
+            first_date = exp_fct_time[0]
+            first_datestr = first_date.strftime('%Y-%m-%d') 
+            last_date = exp_fct_time[len(exp_fct_time)-1]
+            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
+            
+            date = st.date_input(
+                "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
+                value = first_date,
+                min_value = first_date,
+                max_value = last_date,
+            )       
      
-        #if run_type == 'Medium-Range':
-        #    in_run_type = 'medium_range_ensemble_mean'   
+        if run_type == 'Medium-Range':
+            in_run_type = 'medium_range_ensemble_mean'   
+            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
+            exp_fct_indata = exp_fct[0]["data"]
+            exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
+            exp_fct_time = pd.to_datetime(exp_fct_data)
+
+            first_date = exp_fct_time[0]
+            first_datestr = first_date.strftime('%Y-%m-%d') 
+            last_date = exp_fct_time[len(exp_fct_time)-1]
+            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
+            
+            date = st.date_input(
+                "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
+                value = first_date,
+                min_value = first_date,
+                max_value = last_date,
+            )                 
                 
-                
-        #if run_type == 'Long-Range':
-        #    in_run_type = 'long_range_ensemble_mean'
-   
+        if run_type == 'Long-Range':
+            in_run_type = 'long_range_ensemble_mean'
+            exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
+            exp_fct_indata = exp_fct[0]["data"]
+            exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
+            exp_fct_time = pd.to_datetime(exp_fct_data)
+
+            first_date = exp_fct_time[0]
+            first_datestr = first_date.strftime('%Y-%m-%d') 
+            last_date = exp_fct_time[len(exp_fct_time)-1]
+            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
+            
+            date = st.date_input(
+                "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
+                value = first_date,
+                min_value = first_date,
+                max_value = last_date,
+            ) 
                 
             
 """
