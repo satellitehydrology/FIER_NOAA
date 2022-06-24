@@ -97,7 +97,7 @@ with row1_col2:
                 location = location,
                 control_scale=True,
             )
-"""            
+            
     run_type = st.radio('Run type:', ('Analysis Simulation','Short-Range', 'Medium-Range','Long-Range'))
     if run_type == 'Analysis Simulation':
         with st.form("FIER with NWM Analysis Simulation"):        
@@ -185,7 +185,7 @@ with row1_col2:
                 
             streamlit_proc(date, AOI_str, run_type)  
                
-"""
+
 """
 with row1_col2:
     st.subheader('Determine Region of Interest')
