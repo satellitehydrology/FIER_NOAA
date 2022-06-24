@@ -67,7 +67,7 @@ def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
 
     return map_syn
 
-def run_fier(AOI_str, doi):
+def run_fier(AOI_str, doi, run_type):
 
     # Path to read ncecesary data
     TF_model_path = 'AOI/'+AOI_str+'/TF_model/'
@@ -90,8 +90,8 @@ def run_fier(AOI_str, doi):
         sm = xr_RSM.spatial_modes.sel(mode=mode)
         site = xr_RSM.hydro_site[ct_mode].values
              
-        mid_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/medium_range_ensemble_mean/streamflow?&station_id='+str(site)).json()
-        fct_datetime = pd.to_datetime(pd.DataFrame(mid_fct[0]['data'])['forecast-time'])
+        exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+run_type+'/streamflow?&station_id='+str(site)).json()
+        fct_datetime = pd.to_datetime(pd.DataFrame(exp_fct[0]['data'])['forecast-time'])
         doi_indx0 = fct_datetime >= (dt.datetime.strptime(doi,'%Y-%m-%d'))
         doi_indx1 = (fct_datetime < (dt.datetime.strptime(doi,'%Y-%m-%d'))+dt.timedelta(days=1))
         doi_indx = doi_indx0 & doi_indx1
@@ -99,10 +99,8 @@ def run_fier(AOI_str, doi):
         print(fct_datetime[0])
         
         doi_fct_datetime = fct_datetime[doi_indx]
-        doi_fct_q = (pd.DataFrame(mid_fct[0]['data'])['value'][doi_indx]*0.0283168).mean()
-                        
-        
-
+        doi_fct_q = (pd.DataFrame(exp_fct[0]['data'])['value'][doi_indx]*0.0283168).mean()
+                               
         #hydro_single = q_out[ct_mode]
         #good_hydro = hydro_single[hydro_single.time.values==doi]
         #print(good_hydro)
