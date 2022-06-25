@@ -13,23 +13,27 @@ import datetime
 import branca
 import branca.colormap as cm
 
-def streamlit_proc(date, AOI_str, in_run_type):    
+if 'AOI_str' not in st.session_state:
+    st.session_state.AOI_str = 'MississippiRiver'
+
+
+def streamlit_proc(date, AOI_str, in_run_type):
     st.write('Region:', AOI_str)
-    st.write('Date:', date)                                        
-    st.write(in_run_type)        
+    st.write('Date:', date)
+    st.write(in_run_type)
     if AOI_str=='MississippiRiver':
         location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
     elif AOI_str=='RedRiver':
         location = [48.44, -97.17]
-                
+
     m = folium.Map(
         zoom_start = 8,
         location = location,
         control_scale=True,
-    )                
-                
-    bounds = run_fier(AOI_str, str(date), in_run_type)                 
-       
+    )
+
+    bounds = run_fier(AOI_str, str(date), in_run_type)
+
     folium.raster_layers.ImageOverlay(
         image= 'Output/water_fraction.png',
         # image = sar_image,
@@ -38,16 +42,16 @@ def streamlit_proc(date, AOI_str, in_run_type):
         name = 'Water Fraction Map',
         show = True,
     ).add_to(m)
-         
+
     colormap = cm.LinearColormap(colors=['blue','green','red'],
                    vmin=0, vmax=100,
                    caption='Water Fraction (%)')
-    m.add_child(colormap)       
-       
+    m.add_child(colormap)
+
     plugins.Fullscreen(position='topright').add_to(m)
     folium.TileLayer('Stamen Terrain').add_to(m)
     m.add_child(folium.LatLngPopup())
-    folium.LayerControl().add_to(m)      
+    folium.LayerControl().add_to(m)
 
 
 # Page Configuration
@@ -72,7 +76,7 @@ with row1_col1:
     folium.LayerControl().add_to(m)
 
 
-    
+
 with row1_col2:
     st.subheader('Determine Region of Interest')
     with st.form('Select Region'):
@@ -80,63 +84,66 @@ with row1_col2:
         region = st.selectbox(
             'Determine region:',
             ('Mississippi River', 'Red River'),
-        )       
-        
+        )
+
         submitted = st.form_submit_button("Submit")
-        if submitted:    
+        if submitted:
             AOI_str = region.replace(" ", "")
-            st.write('Region:', region)    
+            st.write('Region:', region)
             if region=='Mississippi River':
                 location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
             elif region=='Red River':
                 location = [48.44, -97.17]
-                
+
             m = folium.Map(
                     zoom_start = 8,
                     location = location,
                     control_scale=True,
-            )                                    
-                        
+            )
+            st.session_state.AOI_str = AOI_str
+            st.write(st.session_state.AOI_str)
+
     run_type = st.radio('Run type:', ('Analysis Simulation','Short-Range', 'Medium-Range','Long-Range'))
     if run_type == 'Analysis Simulation':
         in_run_type = 'analysis_assim'
-        with st.form("FIER with NWM Analysis Simulation"):        
+        with st.form("FIER with NWM Analysis Simulation"):
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
             exp_fct_indata = exp_fct[0]["data"]
             exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
             exp_fct_time = pd.to_datetime(exp_fct_data)
 
             first_date = exp_fct_time[0]
-            first_datestr = first_date.strftime('%Y-%m-%d') 
+            first_datestr = first_date.strftime('%Y-%m-%d')
             last_date = exp_fct_time[len(exp_fct_time)-1]
-            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
-            
+            last_datestr = last_date.strftime('%Y-%m-%d')
+
             date = st.date_input(
                 "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
                 value = first_date,
                 min_value = first_date,
                 max_value = last_date,
-            )            
-            
+            )
+
             submitted = st.form_submit_button("Submit")
-            if submitted:           
-                                 
-                #streamlit_proc(date, AOI_str, in_run_type)                                                         
-    
-    
-                bounds = run_fier('MississippiRiver', str(date), in_run_type)                 
-                         
+            if submitted:
+
+                #streamlit_proc(date, AOI_str, in_run_type)
+
+                AOI_str = st.session_state.AOI_str
+                bounds = run_fier(AOI_str, str(date), in_run_type)
+                st.write(AOI_str)
+
                 if region=='Mississippi River':
                     location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
                 elif region=='Red River':
                     location = [48.44, -97.17]
-                
+
                 m = folium.Map(
                         zoom_start = 8,
                         location = location,
                         control_scale=True,
-                ) 
-    
+                )
+
                 folium.raster_layers.ImageOverlay(
                     image= 'Output/water_fraction.png',
                     # image = sar_image,
@@ -145,18 +152,18 @@ with row1_col2:
                     name = 'Water Fraction Map',
                     show = True,
                 ).add_to(m)
-                 
+
                 colormap = cm.LinearColormap(colors=['blue','green','red'],
                                vmin=0, vmax=100,
                                caption='Water Fraction (%)')
-                m.add_child(colormap)       
-       
+                m.add_child(colormap)
+
                 plugins.Fullscreen(position='topright').add_to(m)
                 folium.TileLayer('Stamen Terrain').add_to(m)
                 m.add_child(folium.LatLngPopup())
-                folium.LayerControl().add_to(m)                 
-                
-       
+                folium.LayerControl().add_to(m)
+
+
             try:
                 with open('Output/output.nc', 'rb') as f:
                     st.download_button('Download Latest Run Output',
@@ -164,8 +171,8 @@ with row1_col2:
                     file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
                     mime= "application/netcdf")
             except:
-                pass       
-                
+                pass
+
         if run_type == 'Short-Range':
             in_run_type = 'short_range'
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
@@ -174,36 +181,36 @@ with row1_col2:
             exp_fct_time = pd.to_datetime(exp_fct_data)
 
             first_date = exp_fct_time[0]
-            first_datestr = first_date.strftime('%Y-%m-%d') 
+            first_datestr = first_date.strftime('%Y-%m-%d')
             last_date = exp_fct_time[len(exp_fct_time)-1]
-            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
-            
+            last_datestr = last_date.strftime('%Y-%m-%d')
+
             date = st.date_input(
                 "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
                 value = first_date,
                 min_value = first_date,
                 max_value = last_date,
-            )       
-     
+            )
+
         if run_type == 'Medium-Range':
-            in_run_type = 'medium_range_ensemble_mean'   
+            in_run_type = 'medium_range_ensemble_mean'
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
             exp_fct_indata = exp_fct[0]["data"]
             exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
             exp_fct_time = pd.to_datetime(exp_fct_data)
 
             first_date = exp_fct_time[0]
-            first_datestr = first_date.strftime('%Y-%m-%d') 
+            first_datestr = first_date.strftime('%Y-%m-%d')
             last_date = exp_fct_time[len(exp_fct_time)-1]
-            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
-            
+            last_datestr = last_date.strftime('%Y-%m-%d')
+
             date = st.date_input(
                 "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
                 value = first_date,
                 min_value = first_date,
                 max_value = last_date,
-            )                 
-                
+            )
+
         if run_type == 'Long-Range':
             in_run_type = 'long_range_ensemble_mean'
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
@@ -212,18 +219,18 @@ with row1_col2:
             exp_fct_time = pd.to_datetime(exp_fct_data)
 
             first_date = exp_fct_time[0]
-            first_datestr = first_date.strftime('%Y-%m-%d') 
+            first_datestr = first_date.strftime('%Y-%m-%d')
             last_date = exp_fct_time[len(exp_fct_time)-1]
-            last_datestr = last_date.strftime('%Y-%m-%d')                                                   
-            
+            last_datestr = last_date.strftime('%Y-%m-%d')
+
             date = st.date_input(
                 "Select the date with available NWM forecast ("+first_datestr+" to "+last_datestr+" UTC):",
                 value = first_date,
                 min_value = first_date,
                 max_value = last_date,
-            ) 
-                
-            
+            )
+
+
 """
 with row1_col2:
     st.subheader('Determine Region of Interest')
@@ -241,20 +248,20 @@ with row1_col2:
              max_value = last_date,
              )
         #st.write(date)
-        
+
         submitted = st.form_submit_button("Submit")
         if submitted:
             AOI_str = region.replace(" ", "")
             st.write('Region:', region)
-            st.write('Date:', date)                                        
-            
+            st.write('Date:', date)
+
             bounds = run_fier(AOI_str, str(date))
-            
+
             if region=='Mississippi River':
                 location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
             elif region=='Red River':
                 location = [48.44, -97.17]
-                
+
             m = folium.Map(
                 zoom_start = 8,
                 location = location,
@@ -274,7 +281,7 @@ with row1_col2:
                                       vmin=0, vmax=100,
                                      caption='Water Fraction (%)')
             m.add_child(colormap)
-              
+
             plugins.Fullscreen(position='topright').add_to(m)
             folium.TileLayer('Stamen Terrain').add_to(m)
             m.add_child(folium.LatLngPopup())
