@@ -104,9 +104,10 @@ with row1_col2:
             st.write(st.session_state.AOI_str)
 
     run_type = st.radio('Run type:', ('Analysis Simulation','Short-Range', 'Medium-Range','Long-Range'))
-    if run_type == 'Analysis Simulation':
+    with st.form("FIER with NWM Analysis Simulation"):
+       if run_type == 'Analysis Simulation':
         in_run_type = 'analysis_assim'
-        with st.form("FIER with NWM Analysis Simulation"):
+        
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
             exp_fct_indata = exp_fct[0]["data"]
             exp_fct_data = pd.DataFrame(exp_fct_indata)["forecast-time"]
@@ -173,7 +174,7 @@ with row1_col2:
             except:
                 pass
 
-        if run_type == 'Short-Range':
+       if run_type == 'Short-Range':
             in_run_type = 'short_range'
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
             exp_fct_indata = exp_fct[0]["data"]
@@ -192,7 +193,7 @@ with row1_col2:
                 max_value = last_date,
             )
 
-        if run_type == 'Medium-Range':
+       if run_type == 'Medium-Range':
             in_run_type = 'medium_range_ensemble_mean'
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
             exp_fct_indata = exp_fct[0]["data"]
