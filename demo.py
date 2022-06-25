@@ -192,6 +192,56 @@ with row1_col2:
                 min_value = first_date,
                 max_value = last_date,
             )
+            
+
+            submitted = st.form_submit_button("Submit")
+            if submitted:
+
+                #streamlit_proc(date, AOI_str, in_run_type)
+
+                AOI_str = st.session_state.AOI_str
+                bounds = run_fier(AOI_str, str(date), in_run_type)
+                st.write(AOI_str)
+
+                if region=='Mississippi River':
+                    location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
+                elif region=='Red River':
+                    location = [48.44, -97.17]
+
+                m = folium.Map(
+                        zoom_start = 8,
+                        location = location,
+                        control_scale=True,
+                )
+
+                folium.raster_layers.ImageOverlay(
+                    image= 'Output/water_fraction.png',
+                    # image = sar_image,
+                    bounds = bounds,
+                    opacity = 0.5,
+                    name = 'Water Fraction Map',
+                    show = True,
+                ).add_to(m)
+
+                colormap = cm.LinearColormap(colors=['blue','green','red'],
+                               vmin=0, vmax=100,
+                               caption='Water Fraction (%)')
+                m.add_child(colormap)
+
+                plugins.Fullscreen(position='topright').add_to(m)
+                folium.TileLayer('Stamen Terrain').add_to(m)
+                m.add_child(folium.LatLngPopup())
+                folium.LayerControl().add_to(m)
+
+
+            try:
+                with open('Output/output.nc', 'rb') as f:
+                    st.download_button('Download Latest Run Output',
+                    f,
+                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
+                    mime= "application/netcdf")
+            except:
+                pass            
 
        if run_type == 'Medium-Range':
             in_run_type = 'medium_range_ensemble_mean'
@@ -212,6 +262,56 @@ with row1_col2:
                 max_value = last_date,
             )
 
+
+            submitted = st.form_submit_button("Submit")
+            if submitted:
+
+                #streamlit_proc(date, AOI_str, in_run_type)
+
+                AOI_str = st.session_state.AOI_str
+                bounds = run_fier(AOI_str, str(date), in_run_type)
+                st.write(AOI_str)
+
+                if region=='Mississippi River':
+                    location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
+                elif region=='Red River':
+                    location = [48.44, -97.17]
+
+                m = folium.Map(
+                        zoom_start = 8,
+                        location = location,
+                        control_scale=True,
+                )
+
+                folium.raster_layers.ImageOverlay(
+                    image= 'Output/water_fraction.png',
+                    # image = sar_image,
+                    bounds = bounds,
+                    opacity = 0.5,
+                    name = 'Water Fraction Map',
+                    show = True,
+                ).add_to(m)
+
+                colormap = cm.LinearColormap(colors=['blue','green','red'],
+                               vmin=0, vmax=100,
+                               caption='Water Fraction (%)')
+                m.add_child(colormap)
+
+                plugins.Fullscreen(position='topright').add_to(m)
+                folium.TileLayer('Stamen Terrain').add_to(m)
+                m.add_child(folium.LatLngPopup())
+                folium.LayerControl().add_to(m)
+
+
+            try:
+                with open('Output/output.nc', 'rb') as f:
+                    st.download_button('Download Latest Run Output',
+                    f,
+                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
+                    mime= "application/netcdf")
+            except:
+                pass            
+            
        if run_type == 'Long-Range':
             in_run_type = 'long_range_ensemble_mean'
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
@@ -232,6 +332,56 @@ with row1_col2:
             )
 
 
+            submitted = st.form_submit_button("Submit")
+            if submitted:
+
+                #streamlit_proc(date, AOI_str, in_run_type)
+
+                AOI_str = st.session_state.AOI_str
+                bounds = run_fier(AOI_str, str(date), in_run_type)
+                st.write(AOI_str)
+
+                if region=='Mississippi River':
+                    location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
+                elif region=='Red River':
+                    location = [48.44, -97.17]
+
+                m = folium.Map(
+                        zoom_start = 8,
+                        location = location,
+                        control_scale=True,
+                )
+
+                folium.raster_layers.ImageOverlay(
+                    image= 'Output/water_fraction.png',
+                    # image = sar_image,
+                    bounds = bounds,
+                    opacity = 0.5,
+                    name = 'Water Fraction Map',
+                    show = True,
+                ).add_to(m)
+
+                colormap = cm.LinearColormap(colors=['blue','green','red'],
+                               vmin=0, vmax=100,
+                               caption='Water Fraction (%)')
+                m.add_child(colormap)
+
+                plugins.Fullscreen(position='topright').add_to(m)
+                folium.TileLayer('Stamen Terrain').add_to(m)
+                m.add_child(folium.LatLngPopup())
+                folium.LayerControl().add_to(m)
+
+
+            try:
+                with open('Output/output.nc', 'rb') as f:
+                    st.download_button('Download Latest Run Output',
+                    f,
+                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
+                    mime= "application/netcdf")
+            except:
+                pass
+            
+            
 """
 with row1_col2:
     st.subheader('Determine Region of Interest')
