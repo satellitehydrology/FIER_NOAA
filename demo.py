@@ -66,7 +66,7 @@ with row1_col2:
             st.session_state.AOI_str = AOI_str
             st.write(st.session_state.AOI_str)
 
-    run_type = st.radio('National Water Model Forecast Configurations:', ('Analysis Simulation','Short-Range', 'Medium-Range','Long-Range'))
+    run_type = st.radio('National Water Model Forecast Configurations:', ('Short-Range', 'Medium-Range','Long-Range'))
     with st.form("FIER with NWM Analysis Simulation"):
        if run_type == 'Analysis Simulation':
             in_run_type = 'analysis_assim'
