@@ -106,7 +106,7 @@ with row1_col2:
     run_type = st.radio('Run type:', ('Analysis Simulation','Short-Range', 'Medium-Range','Long-Range'))
     with st.form("FIER with NWM Analysis Simulation"):
        if run_type == 'Analysis Simulation':
-        in_run_type = 'analysis_assim'
+            in_run_type = 'analysis_assim'
         
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
             exp_fct_indata = exp_fct[0]["data"]
