@@ -212,7 +212,7 @@ with row1_col2:
                 max_value = last_date,
             )
 
-        if run_type == 'Long-Range':
+       if run_type == 'Long-Range':
             in_run_type = 'long_range_ensemble_mean'
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
             exp_fct_indata = exp_fct[0]["data"]
