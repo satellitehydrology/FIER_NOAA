@@ -53,7 +53,7 @@ def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
     # -- Try to vectorize --
     # - Interpolate quantiles of synthesized data to denser bins -
     q2wf_func = interpolate.interp1d(binmid, qsyn, axis=0)
-    dense_binmid = np.arange(0, 1.+1./1000, 1./1000)
+    dense_binmid = np.arange(0, 1.+1./100, 1./100)
     dense_qsyn = q2wf_func(dense_binmid)
     
     # - Get the difference between new image and the interpolated quantiles of synthesized data -
