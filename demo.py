@@ -129,15 +129,6 @@ with row1_col2:
                 folium.LayerControl().add_to(m)
 
 
-            try:
-                with open('Output/output.nc', 'rb') as f:
-                    st.download_button('Download Latest Run Output',
-                    f,
-                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
-                    mime= "application/netcdf")
-            except:
-                pass
-
        if run_type == 'Short-Range':
             in_run_type = 'short_range'
             exp_fct = requests.get('https://nwmdata.nohrsc.noaa.gov/latest/forecasts/'+in_run_type+'/streamflow?&station_id=7469342').json()
@@ -196,16 +187,7 @@ with row1_col2:
                 folium.TileLayer('Stamen Terrain').add_to(m)
                 m.add_child(folium.LatLngPopup())
                 folium.LayerControl().add_to(m)
-
-
-            try:
-                with open('Output/output.nc', 'rb') as f:
-                    st.download_button('Download Latest Run Output',
-                    f,
-                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
-                    mime= "application/netcdf")
-            except:
-                pass            
+            
 
        if run_type == 'Medium-Range':
             in_run_type = 'medium_range_ensemble_mean'
@@ -265,16 +247,7 @@ with row1_col2:
                 folium.TileLayer('Stamen Terrain').add_to(m)
                 m.add_child(folium.LatLngPopup())
                 folium.LayerControl().add_to(m)
-
-
-            try:
-                with open('Output/output.nc', 'rb') as f:
-                    st.download_button('Download Latest Run Output',
-                    f,
-                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
-                    mime= "application/netcdf")
-            except:
-                pass            
+            
             
        if run_type == 'Long-Range':
             in_run_type = 'long_range_ensemble_mean'
@@ -336,72 +309,6 @@ with row1_col2:
                 folium.LayerControl().add_to(m)
 
 
-            try:
-                with open('Output/output.nc', 'rb') as f:
-                    st.download_button('Download Latest Run Output',
-                    f,
-                    file_name='water_fraction_%s_%s.nc'%(AOI_str, date),
-                    mime= "application/netcdf")
-            except:
-                pass
-            
-            
-"""
-with row1_col2:
-    st.subheader('Determine Region of Interest')
-    with st.form('Select Region'):
-
-        region = st.selectbox(
-     'Determine region:',
-     ('Mississippi River', 'Red River'),
-     )
-
-        date = st.date_input(
-             "Select the date with available NWM forecast ("+today_datestr+" to "+last_datestr+" UTC):",
-             value = today_date,
-             min_value = today_date,
-             max_value = last_date,
-             )
-        #st.write(date)
-
-        submitted = st.form_submit_button("Submit")
-        if submitted:
-            AOI_str = region.replace(" ", "")
-            st.write('Region:', region)
-            st.write('Date:', date)
-
-            bounds = run_fier(AOI_str, str(date))
-
-            if region=='Mississippi River':
-                location = [36.62, -89.15] # NEED FIX!!!!!!!!!!!
-            elif region=='Red River':
-                location = [48.44, -97.17]
-
-            m = folium.Map(
-                zoom_start = 8,
-                location = location,
-                control_scale=True,
-            )
-
-            folium.raster_layers.ImageOverlay(
-                image= 'Output/water_fraction.png',
-                # image = sar_image,
-                bounds = bounds,
-                opacity = 0.5,
-                name = 'Water Fraction Map',
-                show = True,
-            ).add_to(m)
-
-            colormap = cm.LinearColormap(colors=['blue','green','red'],
-                                      vmin=0, vmax=100,
-                                     caption='Water Fraction (%)')
-            m.add_child(colormap)
-
-            plugins.Fullscreen(position='topright').add_to(m)
-            folium.TileLayer('Stamen Terrain').add_to(m)
-            m.add_child(folium.LatLngPopup())
-            folium.LayerControl().add_to(m)
-
     try:
         with open('Output/output.nc', 'rb') as f:
             st.download_button('Download Latest Run Output',
@@ -410,7 +317,8 @@ with row1_col2:
             mime= "application/netcdf")
     except:
         pass
-"""
+            
+            
 
 
 with row1_col1:
