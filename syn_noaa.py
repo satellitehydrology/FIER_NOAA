@@ -66,7 +66,8 @@ def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
     bias2q_func = interpolate.interp1d(binmid, bias, axis=0)
     dense_bias = bias2q_func(dense_binmid)
     
-    crt = np.take_along_axis(dense_bias, np.nanargmin(dif_syn,axis=0)[:,None],axis=0)[:,0]
+    dense_bias = np.where(np.isnan(dense_bias),9999,dense_bias)
+    crt = np.take_along_axis(dense_bias, np.nanargmin(dif_syn,axis=0)[:,None],axis=0)[:,0]    
     
     map_syn = qm_stack.water_fraction.values + crt
     map_syn = np.where(map_syn>100,100,map_syn)
