@@ -91,13 +91,13 @@ def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
                 crt = np.interp(bin_unc_mdl, binmid, bias[:, ct_r, ct_c])
 
                 temp = qm_syn + crt
-                temp[temp>100] = 100
-                temp[temp<0] = 0
+                #temp[temp>100] = 100
+                #temp[temp<0] = 0
 
-                map_syn[:,ct_r,ct_c] = temp
-    
-    
-
+                #map_syn[:,ct_r,ct_c] = temp
+                
+    map_syn = np.where(map_syn>100,100,map_syn)
+    map_syn = np.where(map_syn<0,0,map_syn)        
 
     return map_syn
 
