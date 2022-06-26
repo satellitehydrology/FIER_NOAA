@@ -50,6 +50,7 @@ def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
     # -- that the data value corresponds to.                                            --
     # -- Here, it is done by interpolation.
     
+    """
     # -- Try to vectorize --
     # - Interpolate quantiles of synthesized data to denser bins -
     q2wf_func = interpolate.interp1d(binmid, qsyn, axis=0, fill_value=(binmid[0],binmid[-1]))
@@ -75,8 +76,8 @@ def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
     map_syn = qm_stack.water_fraction.values + crt
     map_syn = np.where(map_syn>100,100,map_syn)
     map_syn = np.where(map_syn<0,0,map_syn)
-    
     """
+   
     for ct_r in range(org_stack.sizes['lat']):
         for ct_c in range(org_stack.sizes['lon']):
 
@@ -94,7 +95,7 @@ def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
                 temp[temp<0] = 0
 
                 map_syn[:,ct_r,ct_c] = temp
-    """
+    
     
 
 
