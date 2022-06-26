@@ -10,6 +10,8 @@ import matplotlib.colors
 import requests
 import datetime as dt
 import pandas as pd
+from scipy import interpolate
+
 
 def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
     map_syn = np.empty((qm_stack.sizes['time'],qm_stack.sizes['lat'],qm_stack.sizes['lon']))
@@ -47,6 +49,30 @@ def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
     # -- So, to apply the correction value, need to first find out which quantile bin   --
     # -- that the data value corresponds to.                                            --
     # -- Here, it is done by interpolation.
+    
+    # -- Try to vectorize --
+    # - Interpolate quantiles of synthesized data to denser bins -
+    q2wf_func = interpolate.interp1d(binmid, qsyn, axis=0)
+    dense_binmid = np.arange(0, 1.+1./1000, 1./1000)
+    dense_qsyn = q2wf_func(dense_binmid)
+    
+    # - Get the difference between new image and the interpolated quantiles of synthesized data -
+    # - The bin of interpolated quantile that is closest to the new image value is consider as interpolated bin -
+    dif_syn = np.abs(dense_qsyn - qm_stack.water_fraction.values)
+    #mat_dense_binmid = np.tile(np.expand_dims(np.expand_dims(dense_binmid, axis=-1), axis=-1), (1, dif_syn.shape[1], dif_syn.shape[2]) )   
+    #nrst_binmid=np.take_along_axis(mat_dense_binmid, np.nanargmin(dif_syn,axis=0)[:,None],axis=0)[:,0]
+    
+    # - Get interpolated bias from the interpolated bin -
+    bias2q_func = interpolate.interp1d(binmid, bias, axis=0)
+    dense_bias = bias2q_func(dense_binmid)
+    
+    crt = np.take_along_axis(dense_bias, np.nanargmin(dif_syn,axis=0)[:,None],axis=0)[:,0]
+    
+    map_syn = qm_stack.water_fraction.values + crt
+    map_syn = np.where(map_syn>100,100,map_syn)
+    map_syn = np.where(map_syn<0,0,map_syn)
+    
+    """
     for ct_r in range(org_stack.sizes['lat']):
         for ct_c in range(org_stack.sizes['lon']):
 
@@ -64,6 +90,9 @@ def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
                 temp[temp<0] = 0
 
                 map_syn[:,ct_r,ct_c] = temp
+    """
+    
+
 
     return map_syn
 
