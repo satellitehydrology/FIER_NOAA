@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import datetime
 import branca
 import branca.colormap as cm
+from scipy import interpolate
 
 if 'AOI_str' not in st.session_state:
     st.session_state.AOI_str = 'MississippiRiver'
