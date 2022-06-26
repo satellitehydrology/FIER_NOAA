@@ -52,7 +52,7 @@ def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
     
     # -- Try to vectorize --
     # - Interpolate quantiles of synthesized data to denser bins -
-    q2wf_func = interpolate.interp1d(binmid, qsyn, axis=0)
+    q2wf_func = interpolate.interp1d(binmid, qsyn, axis=0, fill_value='extrapolate')
     dense_binmid = np.arange(0, 1.+1./100, 1./100)
     dense_qsyn = q2wf_func(dense_binmid)
     
@@ -67,9 +67,10 @@ def perf_qm(org_stack, syn_stack, qm_stack, qm_type=0, nbins=100):
     dense_bias = bias2q_func(dense_binmid)
     
     dif_syn = np.where(np.isnan(dif_syn),9999,dif_syn)
+    min_indx = np.nanargmin(dif_syn,axis=0)
     dense_bias = np.where(np.isnan(dense_bias),9999,dense_bias)
     
-    crt = np.take_along_axis(dense_bias, np.nanargmin(dif_syn,axis=0)[:,None],axis=0)[:,0]    
+    crt = np.take_along_axis(dense_bias, min_indx[:,None],axis=0)[:,0]    
     
     map_syn = qm_stack.water_fraction.values + crt
     map_syn = np.where(map_syn>100,100,map_syn)
